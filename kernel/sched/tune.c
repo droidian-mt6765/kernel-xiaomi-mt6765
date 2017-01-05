@@ -335,9 +335,9 @@ schedtune_accept_deltas(int nrg_delta, int cap_delta,
  *    value
  */
 #ifdef CONFIG_MTK_IO_BOOST
-#define BOOSTGROUPS_COUNT 7
+#define BOOSTGROUPS_COUNT 16
 #else
-#define BOOSTGROUPS_COUNT 5
+#define BOOSTGROUPS_COUNT 16
 #endif
 
 /* Array of configured boostgroups */
@@ -1236,12 +1236,6 @@ schedtune_css_alloc(struct cgroup_subsys_state *parent_css)
 
 	if (!parent_css)
 		return &root_schedtune.css;
-
-	/* Allow only single level hierachies */
-	if (parent_css != &root_schedtune.css) {
-		pr_err("Nested SchedTune boosting groups not allowed\n");
-		return ERR_PTR(-ENOMEM);
-	}
 
 	/* Allow only a limited number of boosting groups */
 	for (idx = 1; idx < BOOSTGROUPS_COUNT; ++idx)
