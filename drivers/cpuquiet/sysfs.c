@@ -44,7 +44,6 @@ struct cpuquiet_dev {
 };
 
 unsigned int cpuquiet_nr_power_max_cpus;
-unsigned int cpuquiet_nr_thermal_max_cpus;
 
 static struct kobject *cpuquiet_global_kobject;
 static struct cpuquiet_dev *cpuquiet_cpu_devices[CONFIG_NR_CPUS];
@@ -130,11 +129,6 @@ static ssize_t show_nr_power_max_cpus(struct cpuquiet_attribute *cattr, char *bu
 	return sprintf(buf, "%u\n", cpuquiet_nr_power_max_cpus);
 }
 
-static ssize_t show_nr_thermal_max_cpus(struct cpuquiet_attribute *cattr, char *buf)
-{
-	return sprintf(buf, "%u\n", cpuquiet_nr_thermal_max_cpus);
-}
-
 static ssize_t show_using_isolation(struct cpuquiet_attribute *cattr, char *buf)
 {
 	struct cpuquiet_governor *curr_gov = cpuquiet_get_curr_governor();
@@ -180,7 +174,7 @@ static ssize_t store_nr_min_cpus(struct cpuquiet_attribute *cattr,
 }
 
 static ssize_t store_nr_max_cpus(struct cpuquiet_attribute *cattr,
-					const char *buf, size_t count, bool thermal)
+					const char *buf, size_t count)
 {
 	ssize_t ret = 0;
 	unsigned int new_max_cpus;
@@ -204,15 +198,8 @@ static ssize_t store_nr_max_cpus(struct cpuquiet_attribute *cattr,
 		return -EINVAL;
 	}
 
-	//if (thermal)
-		cpuquiet_nr_thermal_max_cpus = new_max_cpus;
-	//else
-		cpuquiet_nr_power_max_cpus = new_max_cpus;
-
-	if (cpuquiet_nr_thermal_max_cpus < cpuquiet_nr_power_max_cpus)
-		cpuquiet_nr_max_cpus = cpuquiet_nr_thermal_max_cpus;
-	else
-		cpuquiet_nr_max_cpus = cpuquiet_nr_power_max_cpus;
+	cpuquiet_nr_power_max_cpus = new_max_cpus;
+	cpuquiet_nr_max_cpus = cpuquiet_nr_power_max_cpus;
 
 	mutex_unlock(&cpuquiet_min_max_cpus_lock);
 
@@ -224,13 +211,7 @@ static ssize_t store_nr_max_cpus(struct cpuquiet_attribute *cattr,
 static ssize_t store_nr_power_max_cpus(struct cpuquiet_attribute *cattr,
 					const char *buf, size_t count)
 {
-	return store_nr_max_cpus(cattr, buf, count, false);
-}
-
-static ssize_t store_nr_thermal_max_cpus(struct cpuquiet_attribute *cattr,
-					const char *buf, size_t count)
-{
-	return store_nr_max_cpus(cattr, buf, count, true);
+	return store_nr_max_cpus(cattr, buf, count);
 }
 
 static ssize_t store_using_isolation(struct cpuquiet_attribute *cattr,
@@ -272,7 +253,6 @@ CPQ_ATTRIBUTE(available_governors, 0444, show_available_governors, NULL);
 CPQ_ATTRIBUTE(nr_min_cpus, 0644, show_nr_min_cpus, store_nr_min_cpus);
 CPQ_ATTRIBUTE(nr_max_cpus, 0444, show_nr_max_cpus, NULL);
 CPQ_ATTRIBUTE(nr_power_max_cpus, 0644, show_nr_power_max_cpus, store_nr_power_max_cpus);
-CPQ_ATTRIBUTE(nr_thermal_max_cpus, 0644, show_nr_thermal_max_cpus, store_nr_thermal_max_cpus);
 CPQ_ATTRIBUTE(use_sched_isolation, 0644, show_using_isolation, store_using_isolation);
 
 static struct attribute *cpuquiet_default_attrs[] = {
@@ -281,7 +261,6 @@ static struct attribute *cpuquiet_default_attrs[] = {
 	&nr_min_cpus_attr.attr,
 	&nr_max_cpus_attr.attr,
 	&nr_power_max_cpus_attr.attr,
-	&nr_thermal_max_cpus_attr.attr,
 	&use_sched_isolation_attr.attr,
 	NULL,
 };
