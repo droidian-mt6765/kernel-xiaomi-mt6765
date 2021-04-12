@@ -1,0 +1,3 @@
+GCOV_PROFILE := y
+
+obj-$(CONFIG_CPU_QUIET_GOVERNOR_RQBALANCE) += rqbalance.o
