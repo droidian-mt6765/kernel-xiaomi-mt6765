@@ -554,6 +554,7 @@
 #define SENSOR_DRVNAME_HYNIX_HI1337_I             "hynix_hi1337_i"
 #define SENSOR_DRVNAME_HYNIX_HI1337_II             "hynix_hi1337_ii"
 #define SENSOR_DRVNAME_HYNIX_HI1337_III             "hynix_hi1337_iii"
+#define SENSOR_DRVNAME_HYNIX_HI1337_IIII             "hynix_hi1337_iiii"
 #define SENSOR_DRVNAME_HYNIX_HI259_I		"hynix_hi259_i"
 #define SENSOR_DRVNAME_HYNIX_HI259_II		"hynix_hi259_ii"
 #define SENSOR_DRVNAME_HYNIX_HI259_III		"hynix_hi259_iii"
