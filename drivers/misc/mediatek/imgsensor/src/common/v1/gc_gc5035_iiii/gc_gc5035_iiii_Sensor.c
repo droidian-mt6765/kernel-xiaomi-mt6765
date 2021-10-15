@@ -27,7 +27,7 @@
 #include "kd_imgsensor_define.h"
 #include "kd_imgsensor_errcode.h"
 
-#include "gc_gc5035_iii_Sensor.h"
+#include "gc_gc5035_iiii_Sensor.h"
 
 /**************** Modify Following Strings for Debug ******************/
 #define PFX "gc5035_camera_sensor"

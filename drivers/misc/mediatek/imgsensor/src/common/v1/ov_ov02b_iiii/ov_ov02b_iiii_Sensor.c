@@ -23,7 +23,7 @@
 #include <linux/types.h>
 
 #include "kd_imgsensor_define.h"
-#include "ov_ov02b_i_Sensor.h"
+#include "ov_ov02b_iiii_Sensor.h"
 
 #define PFX "ov02b_camera_sensor"
 #define LOG_INF(format, args...)    \

@@ -33,7 +33,7 @@
 #include "kd_imgsensor_define.h"
 #include "kd_imgsensor_errcode.h"
 
-#include "gc_gc02m1_ii_Sensor.h"
+#include "gc_gc02m10_ii_Sensor.h"
 
 /************************** Modify Following Strings for Debug **************************/
 #define PFX "gc02m1_camera_sensor"

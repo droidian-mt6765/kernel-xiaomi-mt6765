@@ -22,7 +22,7 @@
 #include <linux/atomic.h>
 #include <linux/types.h>
 
-#include "hynix_hi1337_iii_Sensor.h"
+#include "hynix_hi1337_iiii_Sensor.h"
 
 #define PFX "hi1337_camera_sensor"
 #define LOG_INF(format, args...)    \
