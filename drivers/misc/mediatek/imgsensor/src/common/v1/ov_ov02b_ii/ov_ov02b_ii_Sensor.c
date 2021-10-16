@@ -1940,7 +1940,7 @@ static struct SENSOR_FUNCTION_STRUCT sensor_func = {
 	close
 };
 
-UINT32 OV_OV02B_I_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
+UINT32 OV_OV02B_II_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
 {
 	/* To Do : Check Sensor status here */
 	if (pfFunc!=NULL)

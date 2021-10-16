@@ -36,7 +36,7 @@
 #include "gc_gc02m10_ii_Sensor.h"
 
 /************************** Modify Following Strings for Debug **************************/
-#define PFX "gc02m1_camera_sensor"
+#define PFX "gc02m10_camera_sensor"
 #define LOG_1 LOG_INF("GC02M1, MIPI 1LANE\n")
 /****************************   Modify end    *******************************************/
 
@@ -48,7 +48,7 @@
 static DEFINE_SPINLOCK(imgsensor_drv_lock);
 
 static struct imgsensor_info_struct imgsensor_info = {
-	.sensor_id = GC02M1_SENSOR_ID,
+	.sensor_id = GC02M10_SENSOR_ID,
 	.checksum_value = 0xf7375923,
 	.pre = {
 		.pclk = 84000000,
@@ -440,7 +440,7 @@ static void night_mode(kal_bool enable)
 	/* No Need to implement this function */
 }
 
-kal_uint16 addr_data_pair_init_gc02m1[] = {
+kal_uint16 addr_data_pair_init_gc02m10[] = {
 	
 	/*system*/
 	0xfc, 0x01,
@@ -671,22 +671,22 @@ kal_uint16 addr_data_pair_init_gc02m1[] = {
 	0x3e, 0x00,
 };
 
-kal_uint16 addr_data_pair_preview_gc02m1[] = {
+kal_uint16 addr_data_pair_preview_gc02m10[] = {
 	0xfe, 0x00,
 	0x3e, 0x90,
 };
 
-kal_uint16 addr_data_pair_capture_gc02m1[] = {
+kal_uint16 addr_data_pair_capture_gc02m10[] = {
 	0xfe, 0x00,
 	0x3e, 0x90,
 };
 
-kal_uint16 addr_data_pair_normal_video_gc02m1[] = {
+kal_uint16 addr_data_pair_normal_video_gc02m10[] = {
 	0xfe, 0x00,
 	0x3e, 0x90,
 };
 
-kal_uint16 addr_data_pair_hs_video_gc02m1[] = {
+kal_uint16 addr_data_pair_hs_video_gc02m10[] = {
 	0xfe, 0x00,
 	0x3e, 0x90,
 };
@@ -696,7 +696,7 @@ kal_uint16 addr_data_pair_slim_video_gc02m1[] = {
 	0x3e, 0x90,
 };
 
-kal_uint16 addr_data_pair_custom1_gc02m1[] = {
+kal_uint16 addr_data_pair_custom1_gc02m10[] = {
 	0xfe, 0x00,
 	0x41, 0x06,
 	0x42, 0x3c,
@@ -707,8 +707,8 @@ static void sensor_init(void)
 	LOG_INF("E\n");
 
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_init_gc02m1,
-		sizeof(addr_data_pair_init_gc02m1) /
+		addr_data_pair_init_gc02m10,
+		sizeof(addr_data_pair_init_gc02m10) /
 		sizeof(kal_uint16));
 }
 
@@ -716,8 +716,8 @@ static void preview_setting(void)
 {
 	LOG_INF("E\n");
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_preview_gc02m1,
-		sizeof(addr_data_pair_preview_gc02m1) /
+		addr_data_pair_preview_gc02m10,
+		sizeof(addr_data_pair_preview_gc02m10) /
 		sizeof(kal_uint16));
 }
 
@@ -725,8 +725,8 @@ static void capture_setting(void)
 {
 	LOG_INF("E\n");
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_capture_gc02m1,
-		sizeof(addr_data_pair_capture_gc02m1) /
+		addr_data_pair_capture_gc02m10,
+		sizeof(addr_data_pair_capture_gc02m10) /
 		sizeof(kal_uint16));
 }
 
@@ -734,8 +734,8 @@ static void normal_video_setting(void)
 {
 	LOG_INF("E\n");
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_normal_video_gc02m1,
-		sizeof(addr_data_pair_normal_video_gc02m1) /
+		addr_data_pair_normal_video_gc02m10,
+		sizeof(addr_data_pair_normal_video_gc02m10) /
 		sizeof(kal_uint16));
 }
 
@@ -743,8 +743,8 @@ static void hs_video_setting(void)
 {
 	LOG_INF("E\n");
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_hs_video_gc02m1,
-		sizeof(addr_data_pair_hs_video_gc02m1) /
+		addr_data_pair_hs_video_gc02m10,
+		sizeof(addr_data_pair_hs_video_gc02m10) /
 		sizeof(kal_uint16));
 }
 
@@ -760,8 +760,8 @@ static void slim_video_setting(void)
 static void custom1_setting(void)
 {
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_custom1_gc02m1,
-		sizeof(addr_data_pair_custom1_gc02m1) /
+		addr_data_pair_custom1_gc02m10,
+		sizeof(addr_data_pair_custom1_gc02m10) /
 		sizeof(kal_uint16));
 }
 static kal_uint32 set_test_pattern_mode(kal_bool enable)
@@ -1476,7 +1476,7 @@ static struct SENSOR_FUNCTION_STRUCT sensor_func = {
 	close
 };
 
-UINT32 GC_GC02M1_II_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
+UINT32 GC_GC02M10_II_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
 {
 	/* To Do : Check Sensor status here */
 	if (pfFunc != NULL)

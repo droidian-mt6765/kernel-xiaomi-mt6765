@@ -47,7 +47,7 @@ static kal_uint32 Dgain_ratio = GC5035_SENSOR_DGAIN_BASE;
 static struct gc5035_otp_t gc5035_otp_data;
 
 static struct imgsensor_info_struct imgsensor_info = {
-	.sensor_id = GC_GC5035_III_SENSOR_ID,
+	.sensor_id = GC_GC5035_IIII_SENSOR_ID,
 	.checksum_value = 0xdc9f7d95,
 
 	.pre = {
@@ -1757,7 +1757,7 @@ static int gc5035_vendor_id_read(int addr)
 {
 	int  flag = 0;
 	flag = read_cmos_sensor_gc5035(addr);
-    pr_info("GC_GC5035_III  read vendor id , form 0x%x  is: 0x%x\n", addr,flag);
+    pr_info("GC_GC5035_IIII  read vendor id , form 0x%x  is: 0x%x\n", addr,flag);
 	return flag;
 }
 
@@ -1769,7 +1769,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 	cam_pr_debug("E\n");
     flag=gc5035_vendor_id_read(0x10);
     if(flag != gc5035_vendor_id){
-       pr_info("GC_GC5035_III  match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag,gc5035_vendor_id);
+       pr_info("GC_GC5035_IIII  match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag,gc5035_vendor_id);
         return ERROR_SENSOR_CONNECT_FAIL;
     }else{
         gc5035_fusion_id_read();
@@ -2586,7 +2586,7 @@ static struct SENSOR_FUNCTION_STRUCT sensor_func = {
 	close
 };
 
-UINT32 GC_GC5035_III_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
+UINT32 GC_GC5035_IIII_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
 {
 	cam_pr_debug("E\n");
 	/* To Do : Check Sensor status here */

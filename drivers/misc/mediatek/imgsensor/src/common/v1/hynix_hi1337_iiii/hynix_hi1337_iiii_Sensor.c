@@ -44,7 +44,7 @@ extern unsigned char fusion_id_main[48];
 static DEFINE_SPINLOCK(imgsensor_drv_lock);
 
 static struct imgsensor_info_struct imgsensor_info = {
-	.sensor_id = HYNIX_HI1337_III_SENSOR_ID,
+	.sensor_id = HYNIX_HI1337_IIII_SENSOR_ID,
 
 	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
 
@@ -2965,7 +2965,7 @@ static int hi1337_vendor_id_read(int addr)
 {
 	int  flag = 0;
 	flag = read_cmos_sensor_hi1337(0x10);
-    pr_info("hynix_hi1337_III  read vendor id , form 0x10 is: 0x%x\n", flag);
+    pr_info("hynix_hi1337_IIII  read vendor id , form 0x10 is: 0x%x\n", flag);
 	return flag;
 }
 
@@ -3964,7 +3964,7 @@ static struct SENSOR_FUNCTION_STRUCT sensor_func = {
 	close
 };
 
-UINT32 HYNIX_HI1337_III_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
+UINT32 HYNIX_HI1337_IIII_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
 {
 	/* To Do : Check Sensor status here */
 	if (pfFunc != NULL)
