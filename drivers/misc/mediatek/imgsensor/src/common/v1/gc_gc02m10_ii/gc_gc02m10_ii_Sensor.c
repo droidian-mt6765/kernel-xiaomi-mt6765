@@ -691,7 +691,7 @@ kal_uint16 addr_data_pair_hs_video_gc02m10[] = {
 	0x3e, 0x90,
 };
 
-kal_uint16 addr_data_pair_slim_video_gc02m1[] = {
+kal_uint16 addr_data_pair_slim_video_gc02m10[] = {
 	0xfe, 0x00,
 	0x3e, 0x90,
 };
@@ -752,8 +752,8 @@ static void slim_video_setting(void)
 {
 	LOG_INF("E\n");
 	gc02m1_table_write_cmos_sensor(
-		addr_data_pair_slim_video_gc02m1,
-		sizeof(addr_data_pair_slim_video_gc02m1) /
+		addr_data_pair_slim_video_gc02m10,
+		sizeof(addr_data_pair_slim_video_gc02m10) /
 		sizeof(kal_uint16));
 }
 
