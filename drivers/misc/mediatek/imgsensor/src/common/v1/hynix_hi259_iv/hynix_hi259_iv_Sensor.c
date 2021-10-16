@@ -36,9 +36,9 @@
 static DEFINE_SPINLOCK(imgsensor_drv_lock);
 
 static struct imgsensor_info_struct imgsensor_info = { 
-	.sensor_id = HYNIX_HI259_III_SENSOR_ID,
+	.sensor_id = HYNIX_HI259_IV_SENSOR_ID,
 	
-	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
+	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃƒÃŸÃˆÃ„..
 
 	.pre = {
 		.pclk = 78400000,	 //78.4M 	//record different mode's pclk
@@ -2156,7 +2156,7 @@ static int hi259_vendor_id_read(int addr)
 {
 	int  flag = 0;
 	flag = read_cmos_sensor_hi259(addr);
-    pr_info("hynix_hi259_III  read vendor id , form addr 0x%x is: 0x%x\n",addr,flag);
+    pr_info("hynix_hi259_IV  read vendor id , form addr 0x%x is: 0x%x\n",addr,flag);
 	return flag;
 }
 
@@ -2850,7 +2850,7 @@ static struct SENSOR_FUNCTION_STRUCT sensor_func = {
 	close
 };
 
-UINT32 HYNIX_HI259_III_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
+UINT32 HYNIX_HI259_IV_SensorInit(struct SENSOR_FUNCTION_STRUCT **pfFunc)
 {
 	/* To Do : Check Sensor status here */
 	if (pfFunc != NULL)
