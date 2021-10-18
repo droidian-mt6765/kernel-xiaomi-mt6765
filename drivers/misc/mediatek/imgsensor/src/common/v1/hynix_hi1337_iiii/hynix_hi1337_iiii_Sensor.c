@@ -46,7 +46,7 @@ static DEFINE_SPINLOCK(imgsensor_drv_lock);
 static struct imgsensor_info_struct imgsensor_info = {
 	.sensor_id = HYNIX_HI1337_IIII_SENSOR_ID,
 
-	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
+	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃƒÃŸÃˆÃ„..
 
 	.pre = {
 		.pclk = 576000000,	 //VT CLK : 72MHz * 8 = =	576000000				//record different mode's pclk
@@ -2963,10 +2963,10 @@ static void hi1337_fusion_id_read(void)
 }
 static int hi1337_vendor_id_read(int addr)
 {
-	int  flag = 0;
-	flag = read_cmos_sensor_hi1337(0x10);
-    pr_info("hynix_hi1337_IIII  read vendor id , form 0x10 is: 0x%x\n", flag);
-	return flag;
+  int  flag = 0;
+  flag = (addr);
+  pr_info("hynix_hi1337_IIII read vendor id from 0x%x is: 0x%x\n", addr, flag);
+  return flag;
 }
 
 static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
