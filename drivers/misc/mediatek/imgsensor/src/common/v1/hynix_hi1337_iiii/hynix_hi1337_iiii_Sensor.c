@@ -2964,7 +2964,7 @@ static void hi1337_fusion_id_read(void)
 static int hi1337_vendor_id_read(int addr)
 {
   int  flag = 0;
-  flag = (addr);
+  flag = read_cmos_sensor_hi1337(addr);
   pr_info("hynix_hi1337_IIII read vendor id from 0x%x is: 0x%x\n", addr, flag);
   return flag;
 }
