@@ -170,18 +170,7 @@ struct IMGSENSOR_HW_POWER_SEQ sensor_power_sequence[] = {
                 },
         },
 #endif
-#if defined(HYNIX_HI1337_III)
-        {
-                SENSOR_DRVNAME_HYNIX_HI1337_III,
-                {
-                        {DOVDD, Vol_1800, 1},
-                        {AVDD, Vol_2800, 1},
-                        {DVDD, Vol_1100, 1},
-                        {SensorMCLK, Vol_High, 5},
-                        {RST, Vol_High, 1}
-                },
-        },
-#endif
+#
 #if defined(GC_GC5035_I)
 	{
 		SENSOR_DRVNAME_GC_GC5035_I,
@@ -194,6 +183,18 @@ struct IMGSENSOR_HW_POWER_SEQ sensor_power_sequence[] = {
 			{SensorMCLK, Vol_High, 1},
 		},
 	},
+#endif
+#if defined(HYNIX_HI1337_IIII)
+        {
+                SENSOR_DRVNAME_HYNIX_HI1337_IIII,
+                {
+                        {DOVDD, Vol_1800, 1},
+                        {AVDD, Vol_2800, 1},
+                        {DVDD, Vol_1100, 1},
+                        {SensorMCLK, Vol_High, 5},
+                        {RST, Vol_High, 1}
+                },
+        },
 #endif
 #if defined(GC_GC5035_II)
 	{
