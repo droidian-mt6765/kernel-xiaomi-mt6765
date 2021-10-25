@@ -3,6 +3,7 @@
  * fs/f2fs/f2fs.h
  *
  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *             http://www.samsung.com/
  */
 #ifndef _LINUX_F2FS_H
@@ -1261,6 +1262,7 @@ struct f2fs_sb_info {
 	unsigned int gc_mode;			/* current GC state */
 	unsigned int next_victim_seg[2];	/* next segment in victim section */
 	/* for skip statistic */
+	unsigned int atomic_files;              /* # of opened atomic file */
 	unsigned long long skipped_atomic_files[2];	/* FG_GC and BG_GC */
 	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
 
@@ -1327,6 +1329,9 @@ struct f2fs_sb_info {
 
 	/* Precomputed FS UUID checksum for seeding other checksums */
 	__u32 s_chksum_seed;
+
+	struct kmem_cache *inline_xattr_slab;   /* inline xattr entry */
+	unsigned int inline_xattr_slab_size;    /* default inline xattr slab size */
 };
 
 struct f2fs_private_dio {
@@ -2160,7 +2165,7 @@ static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
 		get_pages(sbi, F2FS_DIO_WRITE))
 		return false;
 
-	if (SM_I(sbi) && SM_I(sbi)->dcc_info &&
+	if (type != DISCARD_TIME && SM_I(sbi) && SM_I(sbi)->dcc_info &&
 			atomic_read(&SM_I(sbi)->dcc_info->queued_discard))
 		return false;
 
@@ -2984,6 +2989,8 @@ int f2fs_commit_super(struct f2fs_sb_info *sbi, bool recover);
 int f2fs_sync_fs(struct super_block *sb, int sync);
 extern __printf(3, 4)
 void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+int f2fs_set_bio_ctx(struct inode *inode, struct bio *bio);
+int f2fs_set_bio_ctx_fio(struct f2fs_io_info *fio, struct bio *bio);
 int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi);
 
 /*
@@ -3619,6 +3626,14 @@ static inline bool f2fs_may_encrypt(struct inode *inode)
 #endif
 }
 
+/*static inline bool f2fs_force_buffered_io(struct inode *inode, int rw)
+{
+	return ((f2fs_post_read_required(inode) &&
+			fscrypt_is_sw_encrypt(inode)) ||
+			(rw == WRITE && test_opt(F2FS_I_SB(inode), LFS)) ||
+			F2FS_I_SB(inode)->s_ndevs);
+}*/
+
 static inline int block_unaligned_IO(struct inode *inode,
 				struct kiocb *iocb, struct iov_iter *iter)
 {
@@ -3646,7 +3661,7 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
 	int rw = iov_iter_rw(iter);
 
-	if (f2fs_post_read_required(inode))
+	if (f2fs_post_read_required(inode) && fscrypt_is_sw_encrypt(inode))
 		return true;
 	if (sbi->s_ndevs)
 		return true;

@@ -608,7 +608,7 @@ static void sfq_perturbation(unsigned long arg)
 	struct sfq_sched_data *q = qdisc_priv(sch);
 	spinlock_t *root_lock = qdisc_lock(qdisc_root_sleeping(sch));
 	siphash_key_t nkey;
-
+ 
 	get_random_bytes(&nkey, sizeof(nkey));
 	spin_lock(root_lock);
 	q->perturbation = nkey;

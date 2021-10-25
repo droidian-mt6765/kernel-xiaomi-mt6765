@@ -3,6 +3,7 @@
  * fs/f2fs/super.c
  *
  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *             http://www.samsung.com/
  */
 #include <linux/module.h>
@@ -23,6 +24,7 @@
 #include <linux/f2fs_fs.h>
 #include <linux/sysfs.h>
 #include <linux/quota.h>
+#include <linux/hie.h>
 
 #include "f2fs.h"
 #include "node.h"
@@ -1107,6 +1109,7 @@ static void f2fs_put_super(struct super_block *sb)
 	kvfree(sbi->raw_super);
 
 	destroy_device_list(sbi);
+	f2fs_destroy_xattr_caches(sbi);
 	mempool_destroy(sbi->write_io_dummy);
 #ifdef CONFIG_QUOTA
 	for (i = 0; i < MAXQUOTAS; i++)
@@ -2226,6 +2229,77 @@ static const struct fscrypt_operations f2fs_cryptops = {
 	.empty_dir	= f2fs_empty_dir,
 	.max_namelen	= F2FS_NAME_LEN,
 };
+
+int f2fs_set_bio_ctx(struct inode *inode, struct bio *bio)
+{
+	int ret;
+
+	ret = fscrypt_set_bio_ctx(inode, bio);
+
+	if (!ret && bio_encrypted(bio))
+		bio_bcf_set(bio, BC_IV_PAGE_IDX);
+
+	return ret;
+}
+
+int f2fs_set_bio_ctx_fio(struct f2fs_io_info *fio, struct bio *bio)
+{
+	int ret = 0;
+	struct address_space *mapping;
+
+	/* Don't attach bio ctx for sw encrypted pages,
+	 * including moving raw blocks in GC.
+	 */
+	if (fio->encrypted_page)
+		return 0;
+
+	mapping = page_mapping(fio->page);
+
+	if (mapping)
+		ret = f2fs_set_bio_ctx(mapping->host, bio);
+
+	return ret;
+}
+
+static int __f2fs_set_bio_ctx(struct inode *inode,
+	struct bio *bio)
+{
+	if (inode->i_sb->s_magic != F2FS_SUPER_MAGIC)
+		return -EINVAL;
+
+	return f2fs_set_bio_ctx(inode, bio);
+}
+
+static int __f2fs_key_payload(struct bio_crypt_ctx *ctx,
+	const char *data, const unsigned char **key)
+{
+	if (ctx->bc_fs_type != F2FS_SUPER_MAGIC)
+		return -EINVAL;
+
+	return fscrypt_key_payload(ctx, data, key);
+}
+
+struct hie_fs f2fs_hie = {
+	.name = "f2fs",
+	.key_payload = __f2fs_key_payload,
+	.set_bio_context = __f2fs_set_bio_ctx,
+	.priv = NULL,
+};
+
+#else
+static const struct fscrypt_operations f2fs_cryptops = {
+	.is_encrypted	= f2fs_encrypted_inode,
+};
+
+int f2fs_set_bio_ctx(struct inode *inode, struct bio *bio)
+{
+	return 0;
+}
+
+int f2fs_set_bio_ctx_fio(struct f2fs_io_info *fio, struct bio *bio)
+{
+	return 0;
+}
 #endif
 
 static struct inode *f2fs_nfs_get_inode(struct super_block *sb,
@@ -3221,12 +3295,17 @@ try_onemore:
 		}
 	}
 
+	/* init per sbi slab cache */
+	err = f2fs_init_xattr_caches(sbi);
+	if (err)
+		goto free_io_dummy;
+
 	/* get an inode for meta space */
 	sbi->meta_inode = f2fs_iget(sb, F2FS_META_INO(sbi));
 	if (IS_ERR(sbi->meta_inode)) {
 		f2fs_msg(sb, KERN_ERR, "Failed to read F2FS meta data inode");
 		err = PTR_ERR(sbi->meta_inode);
-		goto free_io_dummy;
+		goto free_xattr_cache;
 	}
 
 	err = f2fs_get_valid_checkpoint(sbi);
@@ -3474,6 +3553,8 @@ free_meta_inode:
 	make_bad_inode(sbi->meta_inode);
 	iput(sbi->meta_inode);
 	sbi->meta_inode = NULL;
+free_xattr_cache:
+	f2fs_destroy_xattr_caches(sbi);
 free_io_dummy:
 	mempool_destroy(sbi->write_io_dummy);
 free_percpu:
@@ -3601,6 +3682,11 @@ static int __init init_f2fs_fs(void)
 	err = f2fs_init_post_read_processing();
 	if (err)
 		goto free_root_stats;
+
+#ifdef CONFIG_F2FS_FS_ENCRYPTION
+	hie_register_fs(&f2fs_hie);
+#endif
+
 	return 0;
 
 free_root_stats:

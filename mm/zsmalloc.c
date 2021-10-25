@@ -2,6 +2,7 @@
  * zsmalloc memory allocator
  *
  * Copyright (C) 2011  Nitin Gupta
+ * Copyright (C) 2021 XiaoMi, Inc.
  * Copyright (C) 2012, 2013 Minchan Kim
  *
  * This code is released using a dual license strategy: BSD/GPL
@@ -114,7 +115,12 @@
  */
 #define OBJ_ALLOCATED_TAG 1
 #define OBJ_TAG_BITS 1
+#if BITS_PER_LONG == 32
+/* minus 1 bit for large DRAM (>3GB) */
+#define OBJ_INDEX_BITS	(BITS_PER_LONG - _PFN_BITS - OBJ_TAG_BITS - 1)
+#else
 #define OBJ_INDEX_BITS	(BITS_PER_LONG - _PFN_BITS - OBJ_TAG_BITS)
+#endif
 #define OBJ_INDEX_MASK	((_AC(1, UL) << OBJ_INDEX_BITS) - 1)
 
 #define MAX(a, b) ((a) >= (b) ? (a) : (b))
@@ -766,7 +772,7 @@ static void insert_zspage(struct size_class *class,
 {
 	struct zspage *head;
 
-	zs_stat_inc(class, fullness, 1);
+	zs_stat_inc(class, (enum zs_stat_type)fullness, 1);
 	head = list_first_entry_or_null(&class->fullness_list[fullness],
 					struct zspage, list);
 	/*
@@ -794,7 +800,7 @@ static void remove_zspage(struct size_class *class,
 	VM_BUG_ON(is_zspage_isolated(zspage));
 
 	list_del_init(&zspage->list);
-	zs_stat_dec(class, fullness, 1);
+	zs_stat_dec(class, (enum zs_stat_type)fullness, 1);
 }
 
 /*
@@ -2098,8 +2104,11 @@ int zs_page_migrate(struct address_space *mapping, struct page *newpage,
 
 	spin_lock(&class->lock);
 	if (!get_zspage_inuse(zspage)) {
-		ret = -EBUSY;
-		goto unlock_class;
+		/*
+		 * Set "offset" to end of the page so that every loops
+		 * skips unnecessary object scanning.
+		 */
+		offset = PAGE_SIZE;
 	}
 
 	pos = offset;
@@ -2158,6 +2167,11 @@ int zs_page_migrate(struct address_space *mapping, struct page *newpage,
 		zs_pool_dec_isolated(pool);
 	}
 
+	if (page_zone(newpage) != page_zone(page)) {
+		dec_zone_page_state(page, NR_ZSPAGES);
+		inc_zone_page_state(newpage, NR_ZSPAGES);
+	}
+
 	reset_page(page);
 	put_page(page);
 	page = newpage;
@@ -2175,7 +2189,6 @@ unpin_objects:
 		}
 	}
 	kunmap_atomic(s_addr);
-unlock_class:
 	spin_unlock(&class->lock);
 	migrate_write_unlock(zspage);
 

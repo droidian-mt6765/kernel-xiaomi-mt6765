@@ -2,6 +2,7 @@
  * Pressure stall information for CPU, memory and IO
  *
  * Copyright (c) 2018 Facebook, Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  * Author: Johannes Weiner <hannes@cmpxchg.org>
  *
  * Polling support by Suren Baghdasaryan <surenb@google.com>
@@ -567,8 +568,11 @@ static void psi_schedule_poll_work(struct psi_group *group, unsigned long delay)
 	 * kworker might be NULL in case psi_trigger_destroy races with
 	 * psi_task_change (hotpath) which can't use locks
 	 */
-	if (likely(kworker))
+	if (likely(kworker)) {
+		lockdep_off();
 		kthread_queue_delayed_work(kworker, &group->poll_work, delay);
+		lockdep_on();
+	}
 	else
 		atomic_set(&group->poll_scheduled, 0);
 
