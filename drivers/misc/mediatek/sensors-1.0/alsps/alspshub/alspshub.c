@@ -66,19 +66,19 @@ static DEFINE_MUTEX(alspshub_mutex);
 static DEFINE_SPINLOCK(calibration_lock);
 
 enum {
-	CMC_BIT_ALS = 1,
-	CMC_BIT_PS = 2,
-} CMC_BIT;
+	CMC_BIT_ALSPSHUB_ALS = 1,
+	CMC_BIT_ALSPSHUB_PS = 2,
+} CMC_BIT_ALSPSHUB;
 enum {
-	CMC_TRC_ALS_DATA = 0x0001,
-	CMC_TRC_PS_DATA = 0x0002,
-	CMC_TRC_EINT = 0x0004,
-	CMC_TRC_IOCTL = 0x0008,
-	CMC_TRC_I2C = 0x0010,
-	CMC_TRC_CVT_ALS = 0x0020,
-	CMC_TRC_CVT_PS = 0x0040,
-	CMC_TRC_DEBUG = 0x8000,
-} CMC_TRC;
+	CMC_TRC_ALSPSHUB_ALS_DATA = 0x0001,
+	CMC_TRC_ALSPSHUB_PS_DATA = 0x0002,
+	CMC_TRC_ALSPSHUB_EINT = 0x0004,
+	CMC_TRC_ALSPSHUB_IOCTL = 0x0008,
+	CMC_TRC_ALSPSHUB_I2C = 0x0010,
+	CMC_TRC_ALSPSHUB_CVT_ALS = 0x0020,
+	CMC_TRC_ALSPSHUB_CVT_PS = 0x0040,
+	CMC_TRC_ALSPSHUB_DEBUG = 0x8000,
+} CMC_TRC_ALSPSHUB;
 
 long alspshub_read_ps(u8 *ps)
 {
@@ -404,9 +404,9 @@ static int alshub_factory_enable_sensor(bool enable_disable,
 	}
 	mutex_lock(&alspshub_mutex);
 	if (enable_disable)
-		set_bit(CMC_BIT_ALS, &obj->enable);
+		set_bit(CMC_BIT_ALSPSHUB_ALS, &obj->enable);
 	else
-		clear_bit(CMC_BIT_ALS, &obj->enable);
+		clear_bit(CMC_BIT_ALSPSHUB_ALS, &obj->enable);
 	mutex_unlock(&alspshub_mutex);
 	return 0;
 }
@@ -477,9 +477,9 @@ static int pshub_factory_enable_sensor(bool enable_disable,
 	}
 	mutex_lock(&alspshub_mutex);
 	if (enable_disable)
-		set_bit(CMC_BIT_PS, &obj->enable);
+		set_bit(CMC_BIT_ALSPSHUB_PS, &obj->enable);
 	else
-		clear_bit(CMC_BIT_PS, &obj->enable);
+		clear_bit(CMC_BIT_ALSPSHUB_PS, &obj->enable);
 	mutex_unlock(&alspshub_mutex);
 	return 0;
 }
@@ -635,9 +635,9 @@ static int als_enable_nodata(int en)
 
 	mutex_lock(&alspshub_mutex);
 	if (en)
-		set_bit(CMC_BIT_ALS, &obj_ipi_data->enable);
+		set_bit(CMC_BIT_ALSPSHUB_ALS, &obj_ipi_data->enable);
 	else
-		clear_bit(CMC_BIT_ALS, &obj_ipi_data->enable);
+		clear_bit(CMC_BIT_ALSPSHUB_ALS, &obj_ipi_data->enable);
 	mutex_unlock(&alspshub_mutex);
 	return 0;
 }
@@ -727,7 +727,7 @@ static int als_get_data(int *value, int *status)
 		*status = SENSOR_STATUS_ACCURACY_MEDIUM;
 	}
 
-	if (atomic_read(&obj_ipi_data->trace) & CMC_TRC_PS_DATA)
+	if (atomic_read(&obj_ipi_data->trace) & CMC_TRC_ALSPSHUB_PS_DATA)
 		pr_debug("value = %d\n", *value);
 	return 0;
 }
@@ -756,9 +756,9 @@ static int ps_enable_nodata(int en)
 
 	mutex_lock(&alspshub_mutex);
 	if (en)
-		set_bit(CMC_BIT_PS, &obj_ipi_data->enable);
+		set_bit(CMC_BIT_ALSPSHUB_PS, &obj_ipi_data->enable);
 	else
-		clear_bit(CMC_BIT_PS, &obj_ipi_data->enable);
+		clear_bit(CMC_BIT_ALSPSHUB_PS, &obj_ipi_data->enable);
 	mutex_unlock(&alspshub_mutex);
 
 
@@ -819,7 +819,7 @@ static int ps_get_data(int *value, int *status)
 		*status = SENSOR_STATUS_ACCURACY_MEDIUM;
 	}
 
-	if (atomic_read(&obj_ipi_data->trace) & CMC_TRC_PS_DATA)
+	if (atomic_read(&obj_ipi_data->trace) & CMC_TRC_ALSPSHUB_PS_DATA)
 		pr_debug("value = %d\n", *value);
 
 	return err;
@@ -899,8 +899,8 @@ static int alspshub_probe(struct platform_device *pdev)
 	WRITE_ONCE(obj->ps_factory_enable, false);
 	WRITE_ONCE(obj->ps_android_enable, false);
 
-	clear_bit(CMC_BIT_ALS, &obj->enable);
-	clear_bit(CMC_BIT_PS, &obj->enable);
+	clear_bit(CMC_BIT_ALSPSHUB_ALS, &obj->enable);
+	clear_bit(CMC_BIT_ALSPSHUB_PS, &obj->enable);
 	scp_power_monitor_register(&scp_ready_notifier);
 	err = scp_sensorHub_data_registration(ID_PROXIMITY, ps_recv_data);
 	if (err < 0) {
