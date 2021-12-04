@@ -2,7 +2,6 @@
  * drivers/staging/android/ion/ion_priv.h
  *
  * Copyright (C) 2011 Google, Inc.
- * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -233,9 +232,6 @@ struct ion_heap_ops {
  * @task:		task struct of deferred free thread
  * @debug_show:		called when heap debug file is read to add any
  *			heap specific debug info to output
- * @num_of_buffers	the number of currently allocated buffers
- * @num_of_alloc_bytes	the number of allocated bytes
- * @alloc_bytes_wm	the number of allocated bytes watermark
  *
  * Represents a pool of memory from which buffers can be made.  In some
  * systems the only heap is regular system memory allocated via vmalloc.
@@ -256,12 +252,6 @@ struct ion_heap {
 	spinlock_t free_lock;
 	wait_queue_head_t waitqueue;
 	struct task_struct *task;
-	u64 num_of_buffers;
-	u64 num_of_alloc_bytes;
-	u64 alloc_bytes_wm;
-
-	/* protect heap statistics */
-	spinlock_t stat_lock;
 
 	int (*debug_show)(struct ion_heap *heap, struct seq_file *, void *);
 };
@@ -487,9 +477,6 @@ void ion_free_nolock(struct ion_client *client, struct ion_handle *handle);
 
 int ion_handle_put_nolock(struct ion_handle *handle);
 
-struct ion_handle *ion_handle_get_by_id(struct ion_client *client,
-					int id);
-
 int ion_handle_put(struct ion_handle *handle);
 
 int ion_query_heaps(struct ion_client *client, struct ion_heap_query *query);
@@ -497,4 +484,7 @@ int ion_query_heaps(struct ion_client *client, struct ion_heap_query *query);
 extern struct ion_device *g_ion_device;
 
 extern atomic64_t page_sz_cnt;
+
+int ion_share_dma_buf_fd_nolock(struct ion_client *client,
+				struct ion_handle *handle);
 #endif /* _ION_PRIV_H */
