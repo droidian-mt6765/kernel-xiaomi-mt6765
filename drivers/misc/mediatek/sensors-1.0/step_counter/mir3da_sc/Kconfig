@@ -1,7 +1,0 @@
-
-config MTK_MIR3DA_SC
-	bool "MIR3DA for MediaTek package"
-	default n
-	help
-	MIR3DA step_counter.
-
