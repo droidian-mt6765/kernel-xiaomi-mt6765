@@ -121,8 +121,8 @@ struct bmg_i2c_data {
 #endif
 };
 
-struct gyro_hw gyro_cust;
-static struct gyro_hw *hw = &gyro_cust;
+struct gyro_hw gyro_cust_bmi160;
+static struct gyro_hw *hw = &gyro_cust_bmi160;
 
 static struct gyro_init_info bmi160_gyro_init_info;
 /* 0=OK, -1=fail */
