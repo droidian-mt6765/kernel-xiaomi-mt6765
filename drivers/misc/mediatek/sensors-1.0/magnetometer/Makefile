@@ -7,8 +7,8 @@ obj-y   +=  mag.o
 obj-y   +=  mag_factory.o
 
 obj-$(CONFIG_MTK_MAGHUB)        +=  maghub/
-obj-$(CONFIG_MTK_AKM09915_NEW)         +=  akm09915/
-obj-$(CONFIG_MTK_AKM09918)          +=  akm09918/
+#obj-$(CONFIG_MTK_AKM09915_NEW)         +=  akm09915/
+#obj-$(CONFIG_MTK_AKM09918)          +=  akm09918/
 
 ## new compile condition according to ProjectConfig.mk by xen 20180129
 obj-$(CONFIG_MTK_ST480)   +=  st480/
