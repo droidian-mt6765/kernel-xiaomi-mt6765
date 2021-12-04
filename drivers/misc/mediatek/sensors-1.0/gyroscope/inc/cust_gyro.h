@@ -19,6 +19,13 @@
 
 #define GYRO_CUST_I2C_ADDR_NUM 2
 
+//xjl 20200618 for yk673v6
+#if defined(CONFIG_CUSTOM_KERNEL_SENSORHUB)
+#undef USE_OLD_SENSOR_DTS_ARCH_ACCEL_GYRO
+#else
+#define USE_OLD_SENSOR_DTS_ARCH_ACCEL_GYRO
+#endif
+
 struct gyro_hw {
 	unsigned short addr;
 	int i2c_num;	/*!< the i2c bus used by the chip */
@@ -33,5 +40,9 @@ struct gyro_hw {
 	bool is_batch_supported;
 };
 
+#ifndef USE_OLD_SENSOR_DTS_ARCH_ACCEL_GYRO
 int get_gyro_dts_func(struct device_node *node, struct gyro_hw *hw);
+#else
+int get_gyro_dts_func(const char *, struct gyro_hw*);
+#endif
 #endif

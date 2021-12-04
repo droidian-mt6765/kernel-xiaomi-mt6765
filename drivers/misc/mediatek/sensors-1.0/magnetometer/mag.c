@@ -16,6 +16,7 @@
 #include "inc/mag.h"
 #include "sensor_performance.h"
 #include <linux/vmalloc.h>
+#undef CONFIG_NANOHUB
 
 struct mag_context *mag_context_obj /* = NULL*/;
 static struct mag_init_info *msensor_init_list[MAX_CHOOSE_G_NUM] = {0};
@@ -218,7 +219,7 @@ static int mag_enable_and_batch(void)
 		pr_debug("mag set ODR, fifo latency done\n");
 		/* start polling, if needed */
 		if (cxt->mag_ctl.is_report_input_direct == false) {
-			uint64_t mdelay = cxt->delay_ns;
+			unsigned long long mdelay = cxt->delay_ns; //xjl 20180617
 
 			do_div(mdelay, 1000000);
 			atomic_set(&cxt->delay, mdelay);

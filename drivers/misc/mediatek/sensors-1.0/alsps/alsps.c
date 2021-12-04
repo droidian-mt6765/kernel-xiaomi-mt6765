@@ -15,6 +15,15 @@
 
 #include "inc/alsps.h"
 #include "inc/aal_control.h"
+
+#include <linux/proc_fs.h> 
+
+/* alsps-sensor information */
+//Start xen 20160415
+#define PROC_ALSPS_INFO "driver/alsps_sensor_info"
+#define alsps_info_size 128
+char mtk_alsps_name[alsps_info_size] = {0};
+//end
 struct alsps_context *alsps_context_obj /* = NULL*/;
 struct platform_device *pltfm_dev;
 int last_als_report_data = -1;
@@ -384,7 +393,7 @@ static int als_enable_and_batch(void)
 		pr_debug("als set ODR, fifo latency done\n");
 		/* start polling, if needed */
 		if (cxt->als_ctl.is_report_input_direct == false) {
-			uint64_t mdelay = cxt->als_delay_ns;
+			unsigned long long mdelay = cxt->als_delay_ns; //xjl 20180617
 
 			do_div(mdelay, 1000000);
 			/* defaut max polling delay */
@@ -903,6 +912,7 @@ static int alsps_real_driver_init(void)
 			if (err == 0) {
 				pr_debug(" alsps real driver %s probe ok\n",
 					  alsps_init_list[i]->name);
+				snprintf(mtk_alsps_name,sizeof(mtk_alsps_name),"%s",alsps_init_list[i]->name); //xen 20160415
 				break;
 			}
 		}
@@ -1232,6 +1242,26 @@ int alsps_aal_get_data(void)
 }
 /* *************************************************** */
 
+/* ALSPS sensor information */ //Start xen 20160415
+static int subsys_alsps_info_read(struct seq_file *m, void *v)
+{
+   
+   seq_printf(m, "%s\n",mtk_alsps_name);
+   return 0;
+};
+
+static int proc_alsps_info_open(struct inode *inode, struct file *file)
+{
+    return single_open(file, subsys_alsps_info_read, NULL);
+};
+
+static  struct file_operations ftp_proc_fops1 = {
+    .owner = THIS_MODULE,
+    .open  = proc_alsps_info_open,
+    .read  = seq_read,
+};
+//end
+
 static int alsps_probe(void)
 {
 	int err;
@@ -1243,6 +1273,11 @@ static int alsps_probe(void)
 		pr_err("unable to allocate devobj!\n");
 		goto exit_alloc_data_failed;
 	}
+
+//Start xen 20160415
+       memset(mtk_alsps_name,0,alsps_info_size);
+       proc_create(PROC_ALSPS_INFO, 0, NULL, &ftp_proc_fops1);
+//end
 	/* init real alspseleration driver */
 	err = alsps_real_driver_init();
 	if (err) {

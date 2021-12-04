@@ -39,6 +39,10 @@
 #include <sensors_io.h>
 
 #define ALSPS_TAG "<ALS/PS> "
+#define ALSPS_FUN(f)				pr_debug(ALSPS_TAG"%s\n", __func__)
+#define ALSPS_PR_ERR(fmt, args...)	pr_err(ALSPS_TAG"%s %d : "fmt, __func__, __LINE__, ##args)
+#define ALSPS_LOG(fmt, args...)		pr_debug(ALSPS_TAG fmt, ##args)
+#define ALSPS_VER(fmt, args...)		pr_debug(ALSPS_TAG"%s: "fmt, __func__, ##args) /* ((void)0) */
 
 #define OP_ALSPS_DELAY 0X01
 #define OP_ALSPS_ENABLE 0X02

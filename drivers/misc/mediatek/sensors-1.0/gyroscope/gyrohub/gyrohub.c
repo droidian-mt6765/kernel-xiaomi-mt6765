@@ -771,6 +771,7 @@ static int gyrohub_set_cali(uint8_t *data, uint8_t count)
 	return sensor_cfg_to_hub(ID_GYROSCOPE, data, count);
 }
 
+#if 0 //xjl 20180811
 static int gpio_config(void)
 {
 	int ret;
@@ -805,6 +806,7 @@ static int gpio_config(void)
 
 	return 0;
 }
+#endif
 
 static int gyrohub_get_data(int *x, int *y, int *z, int *status)
 {
@@ -875,11 +877,14 @@ static int gyrohub_probe(struct platform_device *pdev)
 	init_completion(&obj->calibration_done);
 	init_completion(&obj->selftest_done);
 
+#if 0 //xjl 20180811
 	err = gpio_config();
 	if (err < 0) {
 		pr_err("gpio_config failed\n");
 		goto exit_kfree;
 	}
+#endif
+
 	scp_power_monitor_register(&scp_ready_notifier);
 	err = scp_sensorHub_data_registration(ID_GYROSCOPE, gyro_recv_data);
 	if (err < 0) {

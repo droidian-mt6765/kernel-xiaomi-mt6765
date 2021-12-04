@@ -18,6 +18,13 @@
 #include <linux/types.h>
 #define G_CUST_I2C_ADDR_NUM 2
 
+//xjl 20200618 for yk673v6
+#if defined(CONFIG_CUSTOM_KERNEL_SENSORHUB)
+#undef USE_OLD_SENSOR_DTS_ARCH_ACCEL_GYRO
+#else
+#define USE_OLD_SENSOR_DTS_ARCH_ACCEL_GYRO
+#endif
+
 struct acc_hw {
 	int i2c_num;   /*!< the i2c bus used by the chip */
 	int direction; /*!< the direction of the chip */
@@ -34,5 +41,9 @@ struct acc_hw {
 	bool is_batch_supported;
 };
 
+#ifndef USE_OLD_SENSOR_DTS_ARCH_ACCEL_GYRO
 int get_accel_dts_func(struct device_node *node, struct acc_hw *hw);
+#else
+int get_accel_dts_func(const char *, struct acc_hw*);
+#endif
 #endif

@@ -1,4 +1,3 @@
-
 config CUSTOM_KERNEL_GYROSCOPE
 	bool "CUSTOM KERNEL GYROSCOPE Config"
 	help

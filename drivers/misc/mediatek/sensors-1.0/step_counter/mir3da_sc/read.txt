@@ -1,0 +1,5 @@
+for mt6739
+quick porting guide:
+1. open step count Macro in driver&HAL
+2. put step count driver in step_counter folder, acc driver in Accelerometer folder.
+3. add step_counter infomation in dts.

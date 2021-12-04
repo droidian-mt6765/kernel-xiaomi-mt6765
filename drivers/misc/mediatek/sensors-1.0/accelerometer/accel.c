@@ -17,6 +17,13 @@
 #include "sensor_performance.h"
 #include <linux/vmalloc.h>
 
+/* Gsensor information */
+#include <linux/proc_fs.h> 
+//Start zxs 20150525
+#define PROC_ACCEL_INFO "driver/gsensor_info"
+#define accel_info_size 128
+char mtk_accel_name[accel_info_size] = {0};
+//end
 struct acc_context *acc_context_obj /* = NULL*/;
 
 static struct acc_init_info *gsensor_init_list[MAX_CHOOSE_G_NUM] = {0};
@@ -267,7 +274,7 @@ static int acc_enable_and_batch(void)
 		/* start polling, if needed */
 		if (cxt->is_active_data == true &&
 		    cxt->acc_ctl.is_report_input_direct == false) {
-			uint64_t mdelay = cxt->delay_ns;
+			unsigned long long mdelay = cxt->delay_ns; //xjl 20180617
 
 			do_div(mdelay, 1000000);
 			atomic_set(&cxt->delay, mdelay);
@@ -545,6 +552,7 @@ static int acc_real_driver_init(void)
 			if (err == 0) {
 				pr_debug(" acc real driver %s probe ok\n",
 					gsensor_init_list[i]->name);
+					snprintf(mtk_accel_name,sizeof(mtk_accel_name),"%s",gsensor_init_list[i]->name); //zxs 20150525
 				break;
 			}
 		}
@@ -772,6 +780,27 @@ int acc_flush_report(void)
 	err = sensor_input_event(acc_context_obj->mdev.minor, &event);
 	return err;
 }
+
+/* Gsensor information */ //Start zxs 20150525
+static int subsys_accel_info_read(struct seq_file *m, void *v)
+{
+   
+   seq_printf(m, "%s\n",mtk_accel_name);
+   return 0;
+};
+
+static int proc_accel_info_open(struct inode *inode, struct file *file)
+{
+    return single_open(file, subsys_accel_info_read, NULL);
+};
+
+static  struct file_operations ftp_proc_fops1 = {
+    .owner = THIS_MODULE,
+    .open  = proc_accel_info_open,
+    .read  = seq_read,
+};
+//end
+
 static int acc_probe(void)
 {
 
@@ -785,6 +814,11 @@ static int acc_probe(void)
 		pr_err("unable to allocate devobj!\n");
 		goto exit_alloc_data_failed;
 	}
+
+//Start zxs 20150525
+       memset(mtk_accel_name,0,accel_info_size);
+       proc_create(PROC_ACCEL_INFO, 0, NULL, &ftp_proc_fops1);
+//end
 	/* init real acceleration driver */
 	err = acc_real_driver_init();
 	if (err) {

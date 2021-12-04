@@ -36,6 +36,18 @@ static const struct i2c_device_id mpu6050_i2c_id[] = {{MPU6050_DEV_NAME, 0}, {} 
 
 int packet_thresh = 75;		/* 600 ms / 8ms/sample */
 
+#ifdef USE_OLD_SENSOR_DTS_ARCH
+/* Maintain  cust info here */
+struct gyro_hw gyro_cust;
+static struct gyro_hw *hw = &gyro_cust;
+struct platform_device *gyroPltFmDev;
+/* For  driver get cust info */
+struct gyro_hw *get_cust_gyro(void)
+{
+	return &gyro_cust;
+}
+#endif
+
 /*----------------------------------------------------------------------------*/
 static int mpu6050_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id);
 static int mpu6050_i2c_remove(struct i2c_client *client);
@@ -1565,12 +1577,18 @@ static int mpu6050_i2c_probe(struct i2c_client *client, const struct i2c_device_
 		goto exit;
 	}
 
+#ifdef USE_OLD_SENSOR_DTS_ARCH //modified by xen 20180109
+	memset(obj, 0, sizeof(struct mpu6050_i2c_data));
+
+	obj->hw = *hw;
+#else
 	err = get_gyro_dts_func(client->dev.of_node, &obj->hw);
 	if (err < 0) {
 		GYRO_ERR("get dts info fail\n");
 		err = -EFAULT;
 		goto exit_init_failed;
 	}
+#endif
 
 	err = hwmsen_get_convert(obj->hw.direction, &obj->cvt);
 	if (err) {
@@ -1589,7 +1607,7 @@ static int mpu6050_i2c_probe(struct i2c_client *client, const struct i2c_device_
 		client->addr = obj->hw.addr >> 1;
 		GYRO_INFO("gyro_use_i2c_addr: %x\n", client->addr);
 	}
-
+	client->addr = 0x69; //xen 20170928
 	obj_i2c_data = obj;
 	obj->client = client;
 	new_client = obj->client;
@@ -1780,6 +1798,15 @@ static int mpu6050_remove(void)
 /*----------------------------------------------------------------------------*/
 static int __init mpu6050_init(void)
 {
+#ifdef USE_OLD_SENSOR_DTS_ARCH
+        int ret = 0;
+	const char *name = "mediatek,mpu6050gy";
+
+	ret = get_gyro_dts_func(name, hw);
+	if (ret!=0)
+		GYRO_ERR("get dts info fail\n");
+#endif
+
 	gyro_driver_add(&mpu6050_init_info);
 	return 0;
 }

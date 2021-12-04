@@ -34,6 +34,10 @@ struct baro_hw {
 	bool is_batch_supported;
 };
 
+#ifndef USE_OLD_SENSOR_DTS_ARCH
 int get_baro_dts_func(struct device_node *node, struct baro_hw *hw);
+#else
+int get_baro_dts_func(const char *name, struct baro_hw *hw);
+#endif
 
 #endif

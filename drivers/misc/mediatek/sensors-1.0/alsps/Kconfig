@@ -1,4 +1,3 @@
-
 config CUSTOM_KERNEL_ALSPS
 	bool "CUSTOM KERNEL ALSPS Config"
 	help
@@ -17,3 +16,5 @@ config MTK_AUTO_DETECT_ALSPS
 
 source "drivers/misc/mediatek/sensors-1.0/alsps/alspshub/Kconfig"
 source "drivers/misc/mediatek/sensors-1.0/alsps/cm36558/Kconfig"
+source "drivers/misc/mediatek/sensors-1.0/alsps/stk3338/Kconfig"
+source "drivers/misc/mediatek/sensors-1.0/alsps/stk3x1x-new/Kconfig"
