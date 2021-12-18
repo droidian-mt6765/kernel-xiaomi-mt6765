@@ -4485,6 +4485,12 @@ CONFIG_ANDROID_BINDER_DEVICES="binder,hwbinder,vndbinder,anbox-binder,anbox-hwbi
 # CONFIG_TEE is not set
 
 #
+# CPUQuiet hotplugging framework
+#
+CONFIG_CPU_QUIET=y
+CONFIG_CPU_QUIET_DEFAULT_GOV_RQBALANCE=y
+
+#
 # Firmware Drivers
 #
 CONFIG_ARM_PSCI_FW=y
@@ -4611,7 +4617,7 @@ CONFIG_SDCARD_FS=y
 # CONFIG_EFS_FS is not set
 # CONFIG_LOGFS is not set
 # CONFIG_CRAMFS is not set
-# CONFIG_SQUASHFS is not set
+CONFIG_SQUASHFS=y
 # CONFIG_VXFS_FS is not set
 # CONFIG_MINIX_FS is not set
 # CONFIG_OMFS_FS is not set
