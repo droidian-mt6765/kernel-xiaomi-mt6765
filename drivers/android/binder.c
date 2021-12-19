@@ -2004,7 +2004,6 @@ static struct binder_node *binder_init_node_ilocked(
 	node->min_priority = to_kernel_prio(node->sched_policy, priority);
 	node->accept_fds = !!(flags & FLAT_BINDER_FLAG_ACCEPTS_FDS);
 	node->inherit_rt = !!(flags & FLAT_BINDER_FLAG_INHERIT_RT);
-	node->txn_security_ctx = 0; /*!!(flags & FLAT_BINDER_FLAG_TXN_SECURITY_CTX);*/
 	spin_lock_init(&node->lock);
 	INIT_LIST_HEAD(&node->work.entry);
 	INIT_LIST_HEAD(&node->async_todo);
@@ -4008,7 +4007,6 @@ static void binder_transaction(struct binder_proc *proc,
 	off_end_offset = off_start_offset + tr->offsets_size;
 	sg_buf_offset = ALIGN(off_end_offset, sizeof(void *));
 	sg_buf_end_offset = sg_buf_offset + extra_buffers_size -
-		ALIGN(secctx_sz, sizeof(u64));
 	off_min = 0;
 	for (buffer_offset = off_start_offset; buffer_offset < off_end_offset;
 	     buffer_offset += sizeof(binder_size_t)) {
@@ -5172,8 +5170,6 @@ retry:
 		tr.data_size = t->buffer->data_size;
 		tr.offsets_size = t->buffer->offsets_size;
 		tr.data.ptr.buffer = (binder_uintptr_t)
-			((uintptr_t)t->buffer->data +
-			binder_alloc_get_user_buffer_offset(&proc->alloc));
 		tr.data.ptr.offsets = tr.data.ptr.buffer +
 					ALIGN(t->buffer->data_size,
 					    sizeof(void *));
@@ -5764,7 +5760,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		}
 		break;
 	}
-	case BINDER_GET_NODE_INFO_FOR_REF: {
+/*	case BINDER_GET_NODE_INFO_FOR_REF: {
 		struct binder_node_info_for_ref info;
 
 		if (copy_from_user(&info, ubuf, sizeof(info))) {
@@ -5782,7 +5778,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		}
 
 		break;
-	}
+	} */
 	case BINDER_GET_NODE_DEBUG_INFO: {
 		struct binder_node_debug_info info;
 
