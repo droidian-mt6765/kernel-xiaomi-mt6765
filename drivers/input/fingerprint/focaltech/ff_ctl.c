@@ -337,25 +337,12 @@ static int ff_ctl_register_input(void)
     int err = 0;
     FF_LOGV("'%s' enter.", __func__);
 
-    /* Allocate the input device. */
+     /* Allocate the input device. */
     g_context->input = input_allocate_device();
     if (!g_context->input) {
         FF_LOGE("input_allocate_device() failed.");
         return (-ENOMEM);
     }
-
-    /* Register the key event capabilities. */
-    if (g_config) {
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_nav_left    );
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_nav_right   );
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_nav_up      );
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_nav_down    );
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_double_click);
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_click       );
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_long_press  );
-        input_set_capability(g_context->input, EV_KEY, g_config->keycode_simulation  );
-    }
-	input_set_capability(g_context->input, EV_KEY, 96);
 
     /* Register the allocated input device. */
     g_context->input->name = "uinput-focaltech";

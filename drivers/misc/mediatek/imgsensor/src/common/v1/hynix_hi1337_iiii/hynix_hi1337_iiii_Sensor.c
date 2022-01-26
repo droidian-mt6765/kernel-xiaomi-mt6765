@@ -37,7 +37,7 @@
 extern bool read_hi1337_eeprom( kal_uint16 addr, BYTE *data, kal_uint32 size); 
 extern bool read_eeprom( kal_uint16 addr, BYTE * data, kal_uint32 size);
 extern unsigned char fusion_id_main[48];
-#define HI1337_VENDOR_ID  0x40 //was 0x31/42 before, 0x41 for AAC
+#define HI1337_VENDOR_ID  0x07 //was 0x31/42 before, 0x41 for AAC
  
 
 #define MULTI_WRITE 1
@@ -2975,13 +2975,13 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 	kal_uint8 retry = 2;
 	int  flag = 0;
 	flag = hi1337_vendor_id_read(0x1); //0x10 for AAC
-    if( flag != HI1337_VENDOR_ID) {
-        pr_info("hynix_hi1337_IIII match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x7 \n", flag);
-        return ERROR_SENSOR_CONNECT_FAIL;
-    }else{
-        hi1337_fusion_id_read();
-    }
-    pr_info("hynix_hi1337_II match vendor id successed, reead vendor id is: 0x%x,expect vendor id is 0x41 \n", flag);
+	if (flag != HI1337_VENDOR_ID) {
+        	pr_info("hynix_hi1337_IIII match vendor id fail, read vendor id is: 0x%x, expect vendor id is 0x%x \n", flag, HI1337_VENDOR_ID);
+	        return ERROR_SENSOR_CONNECT_FAIL;
+	} else{
+		hi1337_fusion_id_read();
+	}
+	pr_info("hynix_hi1337_IIII match vendor id successed, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag, HI1337_VENDOR_ID);
 
 	while (imgsensor_info.i2c_addr_table[i] != 0xff) {
 		spin_lock(&imgsensor_drv_lock);
