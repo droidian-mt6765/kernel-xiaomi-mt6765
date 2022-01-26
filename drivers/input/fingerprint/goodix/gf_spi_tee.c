@@ -940,7 +940,7 @@ static long gf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		gf_debug(INFO_LOG, "%s:received event[%d],key=%d,value=%d\n",
 				__func__, key_input, gf_key.key, gf_key.value);
 
-		if ((gf_key.key == GF_KEY_POWER || gf_key.key == GF_KEY_CAMERA)
+		/*if ((gf_key.key == GF_KEY_POWER || gf_key.key == GF_KEY_CAMERA)
 			&& (gf_key.value == 1)) {
 			input_report_key(gf_dev->input, key_input, 1);
 			input_sync(gf_dev->input);
@@ -952,7 +952,7 @@ static long gf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			input_report_key(gf_dev->input,
 				key_input, gf_key.value);
 			input_sync(gf_dev->input);
-		}
+		}*/
 
 		break;
 
