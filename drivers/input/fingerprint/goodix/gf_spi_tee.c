@@ -751,6 +751,7 @@ static irqreturn_t gf_irq(int irq, void *handle)
 static long gf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	struct gf_device *gf_dev = NULL;
+	struct gf_key gf_key;
 	enum gf_nav_event_t nav_event = GF_NAV_NONE;
 	uint32_t nav_input = 0;
 	uint32_t key_input = 0;
@@ -923,6 +924,35 @@ static long gf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			gf_debug(ERR_LOG,
 			"Failed to copy key event from user to kernel\n");
 			retval = -EFAULT;
+			break;
+		}
+
+		if (gf_key.key == GF_KEY_HOME) {
+			key_input = GF_KEY_INPUT_HOME;
+		} else if (gf_key.key == GF_KEY_POWER) {
+			key_input = GF_KEY_INPUT_POWER;
+		} else if (gf_key.key == GF_KEY_CAMERA) {
+			key_input = GF_KEY_INPUT_CAMERA;
+		} else {
+			/* add special key define */
+			key_input = gf_key.key;
+		}
+		gf_debug(INFO_LOG, "%s:received event[%d],key=%d,value=%d\n",
+				__func__, key_input, gf_key.key, gf_key.value);
+
+		if ((gf_key.key == GF_KEY_POWER || gf_key.key == GF_KEY_CAMERA)
+			&& (gf_key.value == 1)) {
+			input_report_key(gf_dev->input, key_input, 1);
+			input_sync(gf_dev->input);
+			input_report_key(gf_dev->input, key_input, 0);
+			input_sync(gf_dev->input);
+		}
+
+		if (gf_key.key == GF_KEY_HOME) {
+			input_report_key(gf_dev->input,
+				key_input, gf_key.value);
+			input_sync(gf_dev->input);
+		}
 
 		break;
 
