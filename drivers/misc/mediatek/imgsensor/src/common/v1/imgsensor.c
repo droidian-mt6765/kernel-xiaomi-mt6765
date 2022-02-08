@@ -2908,7 +2908,7 @@ static ssize_t imgsensor_name_show(struct device *dev, struct device_attribute *
 		    }
 
 		    for(j=0; j < i; j++) {
-			if(!strcmp("gc_gc5035_i", dst[j]) || !strcmp("gc_gc5035_ii", dst[j]) || !strcmp("gc_gc5035_iii", dst[j])){
+			if(!strcmp("gc_gc5035_i", dst[j]) || !strcmp("gc_gc5035_ii", dst[j]) || !strcmp("gc_gc5035_iii", dst[j]) || !strcmp("gc_gc5035_iiii", dst[j])){
 			    num2 = sprintf(buf + num1, "FRONT=%s\n", dst[j]);
 			    pr_info("[chenxy] FRONT=%s\n", dst[j]);
 			    break;

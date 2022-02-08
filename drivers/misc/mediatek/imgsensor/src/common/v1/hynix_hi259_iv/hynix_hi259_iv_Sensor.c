@@ -38,7 +38,7 @@ static DEFINE_SPINLOCK(imgsensor_drv_lock);
 static struct imgsensor_info_struct imgsensor_info = { 
 	.sensor_id = HYNIX_HI259_IV_SENSOR_ID,
 	
-	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃƒÃŸÃˆÃ„..
+	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
 
 	.pre = {
 		.pclk = 78400000,	 //78.4M 	//record different mode's pclk
