@@ -118,7 +118,7 @@ CONFIG_MT6370_PMU_LDO=y
 CONFIG_MT6370_PMU_DSV=y
 CONFIG_MTK_PMIC_WRAP_HAL=y
 CONFIG_MTK_THERMAL_PA_VIA_ATCMD=y
-CONFIG_CUSTOM_KERNEL_IMGSENSOR="hynix_hi1337_i hynix_hi1337_ii hynix_hi1337_iii gc_gc5035_i gc_gc5035_ii gc_gc5035_iii hynix_hi259_i hynix_hi259_ii ov_ov02b_i ov_ov02b_iii gc_gc02m1_ii hynix_hi259_iii"
+CONFIG_CUSTOM_KERNEL_IMGSENSOR="hynix_hi1337_i hynix_hi1337_ii hynix_hi1337_iii hynix_hi1337_iiii gc_gc5035_i gc_gc5035_ii gc_gc5035_iii gc_gc5035_iiii hynix_hi259_i hynix_hi259_ii ov_ov02b_i ov_ov02b_iii gc_gc02m1_ii hynix_hi259_iii hynix_hi259_iv"
 # 2020.4.1 longcheer puqirui add for headset button start
 CONFIG_CUSTOM_HEADSET_FEATURE=y
 # 2020.4.1 longcheer puqirui add for headset button end

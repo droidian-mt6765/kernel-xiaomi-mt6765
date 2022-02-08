@@ -40,6 +40,11 @@ struct IMGSENSOR_INIT_FUNC_LIST kdSensorList[MAX_NUM_OF_SUPPORT_SENSOR] = {
         SENSOR_DRVNAME_HYNIX_HI1337_III,
         HYNIX_HI1337_III_SensorInit},
 #endif
+#if defined(HYNIX_HI1337_IIII)
+        {HYNIX_HI1337_IIII_SENSOR_ID,
+        SENSOR_DRVNAME_HYNIX_HI1337_IIII,
+        HYNIX_HI1337_IIII_SensorInit},
+#endif
 #if defined(GC_GC5035_I)
         {GC_GC5035_I_SENSOR_ID,
         SENSOR_DRVNAME_GC_GC5035_I,
@@ -54,6 +59,11 @@ struct IMGSENSOR_INIT_FUNC_LIST kdSensorList[MAX_NUM_OF_SUPPORT_SENSOR] = {
         {GC_GC5035_III_SENSOR_ID,
         SENSOR_DRVNAME_GC_GC5035_III,
         GC_GC5035_III_SensorInit},
+#endif
+#if defined(GC_GC5035_IIII)
+        {GC_GC5035_IIII_SENSOR_ID,
+        SENSOR_DRVNAME_GC_GC5035_IIII,
+        GC_GC5035_IIII_SensorInit},
 #endif
 #if defined(HYNIX_HI259_I)
         {HYNIX_HI259_I_SENSOR_ID,
@@ -84,6 +94,11 @@ struct IMGSENSOR_INIT_FUNC_LIST kdSensorList[MAX_NUM_OF_SUPPORT_SENSOR] = {
         {HYNIX_HI259_III_SENSOR_ID,
         SENSOR_DRVNAME_HYNIX_HI259_III,
         HYNIX_HI259_III_SensorInit},
+#endif
+#if defined(HYNIX_HI259_IV)
+        {HYNIX_HI259_IV_SENSOR_ID,
+        SENSOR_DRVNAME_HYNIX_HI259_IV,
+        HYNIX_HI259_IV_SensorInit},
 #endif
 
 	/*  ADD sensor driver before this line */
