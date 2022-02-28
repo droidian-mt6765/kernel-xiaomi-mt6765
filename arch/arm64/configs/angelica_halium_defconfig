@@ -1115,7 +1115,7 @@ CONFIG_CFG80211_CRDA_SUPPORT=y
 # CONFIG_MAC80211 is not set
 CONFIG_MAC80211_STA_HASH_MAX_SIZE=0
 # CONFIG_WIMAX is not set
-# CONFIG_RFKILL is not set
+CONFIG_RFKILL=y
 # CONFIG_RFKILL_REGULATOR is not set
 # CONFIG_NET_9P is not set
 # CONFIG_CAIF is not set
@@ -1411,7 +1411,7 @@ CONFIG_MTK_THERMAL_PA_VIA_ATCMD=y
 #
 # MultiMedia, Display, Camera related configs
 #
-CONFIG_CUSTOM_KERNEL_IMGSENSOR="hynix_hi1337_i hynix_hi1337_ii hynix_hi1337_iii hynix_hi1337_iiii gc_gc5035_i gc_gc5035_ii gc_gc5035_iii gc_gc5035_iiii hynix_hi556_i hynix_hi556_ii hynix_hi259_i hynix_hi259_ii ov_ov02b_i ov_ov02b_ii ov_ov02b_iii ov_ov02b_iiii ov_ov02b_v ov_ov02b10_iv gc_gc02m1_ii gc_gc02m10_ii hynix_hi259_iii hynix_hi259_iv"
+CONFIG_CUSTOM_KERNEL_IMGSENSOR="hynix_hi1337_i hynix_hi1337_ii hynix_hi1337_iii hynix_hi1337_iiii gc_gc5035_i gc_gc5035_ii gc_gc5035_iii gc_gc5035_iiii hynix_hi259_i hynix_hi259_ii ov_ov02b_i ov_ov02b_ii ov_ov02b_iiii ov_ov02b10_iv gc_gc02m1_ii gc_gc02m10_ii hynix_hi259_iii hynix_hi259_iv"
 # CONFIG_MTK_SEC_VIDEO_PATH_SUPPORT is not set
 # CONFIG_MTK_DRM_KEY_MNG_SUPPORT is not set
 # CONFIG_MTK_LCM_PHYSICAL_ROTATION_HW is not set
@@ -4588,7 +4588,7 @@ CONFIG_FS_ENCRYPTION=y
 CONFIG_FSNOTIFY=y
 CONFIG_DNOTIFY=y
 CONFIG_INOTIFY_USER=y
-# CONFIG_FANOTIFY is not set
+CONFIG_FANOTIFY=y
 CONFIG_QUOTA=y
 CONFIG_QUOTA_NETLINK_INTERFACE=y
 CONFIG_PRINT_QUOTA_WARNING=y
@@ -4597,7 +4597,7 @@ CONFIG_QUOTA_TREE=y
 # CONFIG_QFMT_V1 is not set
 CONFIG_QFMT_V2=y
 CONFIG_QUOTACTL=y
-# CONFIG_AUTOFS4_FS is not set
+CONFIG_AUTOFS4_FS=y
 CONFIG_FUSE_FS=y
 # CONFIG_CUSE is not set
 CONFIG_OVERLAY_FS=y
