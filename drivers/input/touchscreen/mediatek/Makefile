@@ -27,4 +27,4 @@ obj-$(CONFIG_TOUCHSCREEN_MTK_FOCALTECH_FHD)	+=  focaltech_fhd_touch/
 obj-$(CONFIG_TOUCHSCREEN_HIMAX_CHIPSET)		+=  hxchipset/
 obj-$(CONFIG_TOUCHSCREEN_FTS)		+=  ft8006s_spi/
 obj-$(CONFIG_TOUCHSCREEN_NT36XXX_HOSTDL_SPI)	+=  nt36xxx_spi/
-
+obj-$(CONFIG_TOUCHSCREEN_CHIPONE)	+= chipone/
