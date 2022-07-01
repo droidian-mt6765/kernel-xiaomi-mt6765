@@ -129,6 +129,7 @@ config TOUCHSCREEN_MTK_FOCALTECH_FHD
 
 source "drivers/input/touchscreen/mediatek/ft8006s_spi/Kconfig"
 source "drivers/input/touchscreen/mediatek/nt36xxx_spi/Kconfig"
+source "drivers/input/touchscreen/mediatek/chipone/Kconfig"
 
 config TOUCHSCREEN_COMMON
 	bool "touchscreen for xiaomi C3L project"
