@@ -11,8 +11,6 @@
 #include <linux/namei.h>
 #include <linux/vmalloc.h>
 
-extern int mtp_fw_ver;
-
 u32 cts_crc32(const u8 *data, size_t len)
 {
     const static u32 crc32_table[] = {
@@ -504,7 +502,7 @@ static int cts_wrap_request_firmware(struct cts_firmware *firmware,
 			firmware->size);
 		ret = -EINVAL;
 		goto err_release_firmware;
-    }
+	}
 
 	/* Check firmware version */
 	if (curr_version > 0 && curr_version >= FIRMWARE_VERSION(firmware)) {
@@ -544,7 +542,7 @@ const struct cts_firmware *cts_request_newer_firmware_from_fs(const struct
 	    (struct cts_firmware *)kzalloc(sizeof(*firmware), GFP_KERNEL);
 	if (firmware == NULL) {
 		cts_err("Request from file alloc struct cts_firmware failed");
-    return NULL;
+		return NULL;
     }
 
 	if (strchr(filepath, '/') != NULL) {	/* Full path */
@@ -644,12 +642,23 @@ const struct cts_firmware *cts_request_firmware(
 
 void cts_release_firmware(const struct cts_firmware *firmware)
 {
-    cts_info("Release firmware");
+    cts_info("Release firmware %p", firmware);
 
-     /* Builtin firmware with non-NULL name, no need to free*/
-    if (firmware && firmware->name == NULL) {
+    if (firmware) {
+        if (firmware->fw) {
+            /* Use request_firmware() get struct firmware * */
+            cts_info("Release firmware from request_firmware()");
+            release_firmware(firmware->fw);
+            kfree(firmware);
+        } else if (firmware->name == NULL) {
+            /* Direct read from file */
+            cts_info("Release firmware from direct-load");
         vfree(firmware->data);
         kfree(firmware);
+        } else {
+            /* Builtin firmware with non-NULL name, no need to free */
+            cts_info("Release firmware from driver built-in");
+        }
     }
 }
 
@@ -724,15 +733,23 @@ err_free_buf:
     return ret;
 }
 
-static int cts_program_firmware_from_sram_to_flash(
-        const struct cts_device *cts_dev,
+static int cts_program_firmware(const struct cts_device *cts_dev,
         const struct cts_firmware_sect_info *firmware_info)
 {
     int ret;
     u8  crc_sect_buf[FIRMWARE_CRC_SECTION_SIZE];
 
-    cts_info("Program firmware from sram to flash, size %zu",
-        firmware_info->firmware_sect_size);
+    cts_info("Program firmware size %zu", firmware_info->firmware_sect_size);
+
+    /* Write firmware to SRAM for easy enter normal mode after update */
+    cts_info("Write firmware section to sram");
+    ret = cts_sram_writesb_check_crc_retry(cts_dev,
+            0, firmware_info->firmware_sect, firmware_info->firmware_sect_size,
+            firmware_info->firmware_sect_crc, 3);
+    if (ret) {
+        cts_err("Write firmware section to sram failed %d", ret);
+        return ret;
+    }
 
     ret = cts_program_flash_from_sram(cts_dev,
             4, 4, firmware_info->firmware_sect_size - 4);
@@ -824,7 +841,6 @@ int cts_update_firmware(struct cts_device *cts_dev,
         const struct cts_firmware *firmware, bool to_flash)
 {
     struct cts_firmware_sect_info firmware_info;
-    ktime_t start_time, end_time, delta_time;
     int ret, retries;
 
     cts_info("Update firmware to %s ver: %04x size: %zu",
@@ -837,62 +853,10 @@ int cts_update_firmware(struct cts_device *cts_dev,
     }
 
     cts_dev->rtdata.updating = true;
-    start_time = ktime_get();
 
     ret = cts_enter_program_mode(cts_dev);
     if (ret) {
         cts_err("Device enter program mode failed %d", ret);
-        goto out;
-    }
-
-    cts_info("Update firmware to sram, size %zu, crc 0x%08x",
-        firmware_info.firmware_sect_size,
-        firmware_info.firmware_sect_crc);
-
-    /* Legacy firmware will copy CRC and len info from SRAM to
-     * hardware register when boot as follow, but new firmware NOT:
-     *   0x0FFF8~0x0FFFC -> 0x15FFC~0x15FFF
-     *   0x0FFFC~0x0FFFF -> 0x15FF8~0x15FFC
-     *  For compatible reason,
-     *    write CRC info to 0x0FFF8~0x0FFFF before write fw to SRAM,
-     *    write CRC info to 0x15FF8~0x15FFF after, write fw to SRAM.
-     */
-    if ((ret = cts_sram_writel_retry(cts_dev, 0x00FFFC,
-        firmware_info.firmware_sect_crc, 3, 1)) != 0) {
-        cts_err("Write CRC to 0x0FFFC failed %d", ret);
-        goto out;
-    }
-    if ((ret = cts_sram_writel_retry(cts_dev, 0x00FFF8,
-        firmware_info.firmware_sect_size, 3, 1)) != 0) {
-        cts_err("Write LEN to 0x0FFF8 failed %d", ret);
-        goto out;
-    }
-
-    ret = cts_sram_writesb_check_crc_retry(cts_dev,
-        0, firmware_info.firmware_sect,
-        firmware_info.firmware_sect_size,
-        firmware_info.firmware_sect_crc, 3);
-    if (ret) {
-        cts_err("Write firmware to sram failed %d", ret);
-    }
-
-    if ((ret = cts_hw_reg_writel_retry(cts_dev, 0x015FF0,
-            0xCC33555A, 3, 1)) != 0) {
-        cts_err("Write VALID flag to 0x015FF0 failed %d", ret);
-        goto out;
-    }
-    if ((ret = cts_hw_reg_writel_retry(cts_dev, 0x015FF8,
-            firmware_info.firmware_sect_crc, 3, 1)) != 0) {
-        cts_err("Write CRC to 0x015FF8 failed %d", ret);
-        goto out;
-    }
-    if ((ret = cts_hw_reg_writel_retry(cts_dev, 0x015FFC,
-            firmware_info.firmware_sect_size, 3, 1)) != 0) {
-        cts_err("Write LEN to 0x015FFC failed %d", ret);
-        goto out;
-    }
-
-    if (!to_flash) {
         goto out;
     }
 
@@ -902,17 +866,30 @@ int cts_update_firmware(struct cts_device *cts_dev,
         // Go through and try
     }
 
-    if (to_flash && !cts_dev->rtdata.has_flash) {
-        cts_err("Update firmware to flash is UNKNOWN/NON-EXIST");
-        ret = -ENODEV;
-        goto post_flash_operation;
+    if (!to_flash || !cts_dev->rtdata.has_flash) {
+        cts_info("Write firmware section to sram size %zu",
+            firmware_info.firmware_sect_size);
+        ret = cts_sram_writesb_check_crc_retry(cts_dev,
+            0, firmware_info.firmware_sect, firmware_info.firmware_sect_size,
+            firmware_info.firmware_sect_crc, 3);
+        if (ret) {
+            cts_err("Write firmware section to sram failed %d", ret);
+        }
+#ifdef CFG_CTS_UPDATE_CRCCHECK
+        if (cts_dev->hwdata->hwid == CTS_DEV_HWID_ICNL9911S ||
+            cts_dev->hwdata->hwid == CTS_DEV_HWID_ICNL9911C) {
+            cts_sram_writesb_boot_crc_retry(cts_dev,
+                firmware_info.firmware_sect_size,
+                firmware_info.firmware_sect_crc,
+                3);
+        }
+#endif
+        goto out;
     }
 
     retries = 0;
     do {
         retries++;
-
-        cts_err("Erase firmware in flash");
 
         ret = cts_erase_flash(cts_dev, CTS_FIRMWARE_CRC_SECTION_OFFSET,
                 firmware_info.firmware_crc_sect_size);
@@ -929,7 +906,7 @@ int cts_update_firmware(struct cts_device *cts_dev,
             continue;
         }
 
-        ret = cts_program_firmware_from_sram_to_flash(cts_dev, &firmware_info);
+        ret = cts_program_firmware(cts_dev, &firmware_info);
         if (ret) {
             cts_err("Program firmware & crc section failed %d retries %d",
                 ret, retries);
@@ -965,7 +942,6 @@ int cts_update_firmware(struct cts_device *cts_dev,
         } while (ret && retries < 3);
     }
 
-post_flash_operation:
     cts_post_flash_operation(cts_dev);
 
 out:
@@ -1012,11 +988,6 @@ out:
         cts_enable_fw_log_redirect(cts_dev);
     }
 #endif
-
-    end_time = ktime_get();
-    delta_time = ktime_sub(end_time, start_time);
-    cts_info("Update firmware, ELAPSED TIME: %lldms",
-        ktime_to_ms(delta_time));
 
     return ret;
 }
