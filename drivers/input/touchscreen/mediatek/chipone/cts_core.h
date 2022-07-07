@@ -2,7 +2,6 @@
 #define CTS_CORE_H
 
 #include "cts_config.h"
-#include <linux/input/sec_cmd.h>
 
 enum cts_dev_hw_reg {
     CTS_DEV_HW_REG_HARDWARE_ID = 0x30000u,
@@ -309,7 +308,6 @@ struct chipone_ts_data {
     struct proc_dir_entry *procfs_entry;
 #endif /* CONFIG_CTS_LEGACY_TOOL */
 
-	struct sec_cmd_data sec;
 	bool gesture_mode;
 };
 
@@ -676,7 +674,6 @@ extern const char *cts_dev_boot_mode2str(u8 boot_mode);
 extern bool cts_is_fwid_valid(u16 fwid);
 extern int chipone_get_array_size(void);
 extern struct chipone_ts_data *tp_info_data;
-extern struct sec_cmd chipone_commands[];
 
 #endif /* CTS_CORE_H */
 
