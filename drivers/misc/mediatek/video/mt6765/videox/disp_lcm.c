@@ -1061,6 +1061,11 @@ static void diff_panel_set_cmd(struct disp_lcm_handle *plcm)
 			hbm1_on = xinli_hbm1_on;
 			hbm2_on = xinli_hbm2_on;
 		}
+		if(strnstr(plcm->drv->name,"icnl9911c",strlen(plcm->drv->name))){
+			hbm0_on = helitai_hbm0_on;
+			hbm1_on = helitai_hbm1_on;
+			hbm2_on = helitai_hbm2_on;
+		}
 	}
 
 }
