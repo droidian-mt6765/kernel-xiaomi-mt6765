@@ -429,7 +429,6 @@ static int cts_request_firmware_full_filepath(struct cts_firmware *firmware,
         goto err_close_file;
     }
     version = get_unaligned_le16(buff);
-    mtp_fw_ver = version;
 
     if (version <= curr_version) {
         cts_info("File '%s' size: %zu version: %04x <= %04x",
@@ -634,7 +633,7 @@ const struct cts_firmware *cts_request_firmware(
     /* Check firmware in file system when probe only when build to .ko */
     if (is_filesystem_mounted(CFG_CTS_FIRMWARE_FILEPATH)) {
         firmware_from_file = cts_request_newer_firmware_from_fs(
-            cts_dev, CFG_CTS_FIRMWARE_FILEPATH,
+            cts_dev, CFG_CTS_FIRMWARE_FILENAME,
             firmware_builtin ? FIRMWARE_VERSION(firmware_builtin) :
                                curr_firmware_ver);
     }

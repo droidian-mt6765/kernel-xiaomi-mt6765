@@ -245,11 +245,6 @@ static int cts_driver_probe(struct spi_device *client)
     cts_enable_gesture_wakeup(&cts_data->cts_dev);
 #endif
 
-	ret = sec_cmd_init(&cts_data->sec, chipone_commands, chipone_get_array_size(), SEC_CLASS_DEVT_TSP);
-	if (ret < 0) {
-		cts_err("%s: Failed to sec_cmd_init\n", __func__);
-	}
-
 	ret = cts_oem_init(cts_data);
 	if (ret < 0) {
 		cts_warn("Init oem specific faild %d", ret);

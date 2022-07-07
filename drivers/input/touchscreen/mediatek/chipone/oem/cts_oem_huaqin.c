@@ -681,7 +681,7 @@ static int dev_mkdir(char *name, umode_t mode)
 	cts_info("mkdir: %s\n", name);
 	fs = get_fs();
 	set_fs(KERNEL_DS);
-	err = ksys_mkdir(name, mode);
+	err = sys_mkdir(name, mode);
 	set_fs(fs);
 
 	return err;
