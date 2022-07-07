@@ -36,10 +36,8 @@
 #include <linux/firmware.h>
 #include <linux/kthread.h>
 #include <linux/sched.h>
-#include <linux/sched/types.h>
 #include <linux/wait.h>
 #include <linux/syscalls.h>
-#include <linux/touchscreen_info.h>
 
 #ifdef CONFIG_OF
 #include <linux/of.h>

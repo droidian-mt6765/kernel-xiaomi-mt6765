@@ -51,8 +51,8 @@
 #define CFG_CTS_DRIVER_BUILTIN_FIRMWARE
 #define CFG_CTS_FIRMWARE_IN_FS
 #ifdef CFG_CTS_FIRMWARE_IN_FS
-    #define CFG_CTS_FIRMWARE_FILENAME       "chipone-tddi.bin"
-    #define CFG_CTS_FIRMWARE_FILEPATH       "/vendor/firmware/chipone-tddi.bin"
+    #define CFG_CTS_FIRMWARE_FILENAME       "chipone-tddi-truly.bin"
+    #define CFG_CTS_FIRMWARE_FILEPATH       "/vendor/firmware/chipone-tddi-truly.bin"
 #endif /* CFG_CTS_FIRMWARE_IN_FS */
 
 #ifdef CONFIG_PROC_FS

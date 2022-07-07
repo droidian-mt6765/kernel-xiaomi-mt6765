@@ -2598,7 +2598,6 @@ init_hwdata:
         cts_err("Device hwid: %06x fwid: %04x not found", hwid, fwid);
         return -ENODEV;
     }
-    mtp_chip_name = "TRULY_NL9911C";
 
 #if 0
 #ifdef CFG_CTS_FIRMWARE_FORCE_UPDATE
@@ -3309,11 +3308,6 @@ void cts_firmware_upgrade_work(struct work_struct *work)
     cts_data = container_of(work, struct chipone_ts_data,
         fw_upgrade_work.work);
     cts_dev = &cts_data->cts_dev;
-
-	ret = sysfs_create_link(&cts_data->sec.fac_dev->kobj, &tpd->dev->dev.kobj, "input");
-	if (ret < 0) {
-		cts_err("%s: Failed to sysfs_create_link,ret is %d", __func__, ret);
-	}
 
     firmware = cts_request_firmware(cts_dev, cts_dev->hwdata->hwid,
         CTS_DEV_FWID_ANY, cts_dev->fwdata.version);
