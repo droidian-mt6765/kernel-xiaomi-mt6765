@@ -41,7 +41,8 @@
 *****************************************************************************/
 #define FTS_FW_REQUEST_SUPPORT                      1
 /* Example: focaltech_ts_fw_tianma.bin */
-#define FTS_FW_NAME_PREX_WITH_REQUEST               "focaltech_ts_fw_"
+#define FTS_FW_NAME_PREX_WITH_REQUEST_AA               "focaltech_aa_ts_fw_"
+#define FTS_FW_NAME_PREX_WITH_REQUEST_AB               "focaltech_ab_ts_fw_"
 #define FTS_READ_BOOT_ID_TIMEOUT                    3
 #define FTS_FLASH_PACKET_LENGTH_SPI_LOW             (4 * 1024 - 4)
 #define FTS_FLASH_PACKET_LENGTH_SPI                 (32 * 1024 - 16)
@@ -884,8 +885,13 @@ int fts_fw_resume(void)
         return -EINVAL;
     }
 
-    snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
-             FTS_FW_NAME_PREX_WITH_REQUEST, upg->module_info->vendor_name);
+    if (strcmp(mtkfb_lcm_name, "ft8006s_vdo_hdp_boe_helitai_drv") == 0) {
+	snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
+		FTS_FW_NAME_PREX_WITH_REQUEST_AA, upg->module_info->vendor_name);
+    } else if(strcmp(mtkfb_lcm_name, "ft8006s_ab_vdo_hdp_boe_helitai_drv") == 0) {
+	snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
+                FTS_FW_NAME_PREX_WITH_REQUEST_AB, upg->module_info->vendor_name);
+    }
 
     /* 1. request firmware */
     ret = request_firmware(&fw, fwname, upg->ts_data->dev);
@@ -1009,9 +1015,15 @@ static int fts_get_fw_file_via_request_firmware(struct fts_upgrade *upg)
     u8 *tmpbuf = NULL;
     char fwname[FILE_NAME_LENGTH] = { 0 };
 
-    snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
-             FTS_FW_NAME_PREX_WITH_REQUEST, \
-             upg->module_info->vendor_name);
+    if (strcmp(mtkfb_lcm_name, "ft8006s_vdo_hdp_boe_helitai_drv") == 0) {
+	snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
+		FTS_FW_NAME_PREX_WITH_REQUEST_AA, \
+		upg->module_info->vendor_name);
+    } else if (strcmp(mtkfb_lcm_name, "ft8006s_ab_vdo_hdp_boe_helitai_drv") == 0) {
+	snprintf(fwname, FILE_NAME_LENGTH, "%s%s.bin", \
+		FTS_FW_NAME_PREX_WITH_REQUEST_AB, \
+		upg->module_info->vendor_name);
+    }
 
     ret = request_firmware(&fw, fwname, upg->ts_data->dev);
     if (0 == ret) {

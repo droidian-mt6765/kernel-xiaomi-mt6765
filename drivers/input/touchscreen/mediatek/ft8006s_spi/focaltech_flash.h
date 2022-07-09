@@ -88,7 +88,7 @@
 #define FTS_DELAY_UPGRADE_AA                        10
 #define FTS_UPGRADE_LOOP                            30
 #define FTS_HEADER_LEN                              32
-#define FTS_FW_BIN_FILEPATH                         "/sdcard/"
+#define FTS_FW_BIN_FILEPATH                         "/vendor/firmware/"
 #define FTS_FW_IDE_SIG                              "IDE_"
 #define FTS_FW_IDE_SIG_LEN                          4
 #define MAX_MODULE_VENDOR_NAME_LEN                  16
