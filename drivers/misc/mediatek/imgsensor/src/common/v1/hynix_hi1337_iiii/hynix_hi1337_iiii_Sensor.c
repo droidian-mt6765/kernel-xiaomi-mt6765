@@ -37,7 +37,7 @@
 extern bool read_hi1337_eeprom( kal_uint16 addr, BYTE *data, kal_uint32 size); 
 extern bool read_eeprom( kal_uint16 addr, BYTE * data, kal_uint32 size);
 extern unsigned char fusion_id_main[48];
-#define HI1337_VENDOR_ID  0x41 //0x41 for AAC
+#define HI1337_VENDOR_ID  0x07
  
 
 #define MULTI_WRITE 1
@@ -292,8 +292,9 @@ static void set_dummy(void)
 
 static kal_uint32 return_sensor_id(void)
 {
-	return (((read_cmos_sensor(0x0716) << 8) | read_cmos_sensor(0x0717))+2);
-
+	kal_uint32 val = (read_cmos_sensor(0x0716) << 8) | read_cmos_sensor(0x0717);
+	// fake sensor ID to avoid collisions between same chip variations
+	return val + (HYNIX_HI1337_IIII_SENSOR_ID - HYNIX_HI1337_I_SENSOR_ID);
 }
 
 
@@ -2963,10 +2964,10 @@ static void hi1337_fusion_id_read(void)
 }
 static int hi1337_vendor_id_read(int addr)
 {
-	int  flag = 0;
-	flag = read_cmos_sensor_hi1337(0x10);
-    pr_info("hynix_hi1337_IIII  read vendor id , form 0x10 is: 0x%x\n", flag);
-	return flag;
+	int val = 0;
+	val = read_cmos_sensor_hi1337(addr);
+	pr_info("hynix_hi1337_IIII read vendor id from 0x%x is: 0x%x\n", addr, val);
+	return val;
 }
 
 static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
@@ -2974,14 +2975,14 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 	kal_uint8 i = 0;
 	kal_uint8 retry = 2;
 	int  flag = 0;
-	flag = hi1337_vendor_id_read(0x10); //0x10 for AAC
+	flag = hi1337_vendor_id_read(0x01);
     if( flag != HI1337_VENDOR_ID) {
-        pr_info("hynix_hi1337_I match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x41 \n", flag);
+        pr_info("hynix_hi1337_IIII match vendor id fail, read vendor id is: 0x%x, expect vendor id is 0x%x \n", flag, HI1337_VENDOR_ID);
         return ERROR_SENSOR_CONNECT_FAIL;
-    }else{
+    } else {
         hi1337_fusion_id_read();
     }
-    pr_info("hynix_hi1337_II match vendor id successed, reead vendor id is: 0x%x,expect vendor id is 0x41 \n", flag);
+    pr_info("hynix_hi1337_IIII match vendor id success, read vendor id is: 0x%x, expect vendor id is 0x%x\n", flag, HI1337_VENDOR_ID);
 
 	while (imgsensor_info.i2c_addr_table[i] != 0xff) {
 		spin_lock(&imgsensor_drv_lock);
@@ -2990,11 +2991,9 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 		do {
 			*sensor_id = return_sensor_id();
 			if (*sensor_id == imgsensor_info.sensor_id) {
-			LOG_INF("i2c write id : 0x%x, sensor id: 0x%x\n",
-			imgsensor.i2c_write_id, *sensor_id);
-
+				pr_info("i2c write id: 0x%x, sensor id: 0x%x\n",
+					imgsensor.i2c_write_id, *sensor_id);
 			}
-
 			retry--;
 		} while (retry > 0);
 		i++;
@@ -3002,7 +3001,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 	}
 
 	if (*sensor_id != imgsensor_info.sensor_id) {
-		LOG_INF("Read id fail,sensor id: 0x%x\n", *sensor_id);
+		pr_info("Read id fail, sensor id: 0x%x\n", *sensor_id);
 		*sensor_id = 0xFFFFFFFF;
 		return ERROR_SENSOR_CONNECT_FAIL;
 	}

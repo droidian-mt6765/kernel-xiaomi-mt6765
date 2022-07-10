@@ -348,7 +348,7 @@
 #define HYNIX_HI1337_I_SENSOR_ID                0x1337
 #define HYNIX_HI1337_II_SENSOR_ID               0x1338
 #define HYNIX_HI1337_III_SENSOR_ID              0x1339
-#define HYNIX_HI1337_IIII_SENSOR_ID              0x1340
+#define HYNIX_HI1337_IIII_SENSOR_ID             0x133A
 #define GC02M1_SENSOR_ID                        0x02e0
 #define GC02M1MACRO_SENSOR_ID                   0x02e2
 #define HYNIX_HI259_I_SENSOR_ID 	0xe1
