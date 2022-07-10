@@ -1,0 +1,6 @@
+linux-android-xiaomi-dandelion (0.0.0+git20220415092736.88cb61b.halium10.new) halium10-new; urgency=medium
+
+  * angelica_halium_defconfig: Enable SQUASHFS support
+
+ -- Muhammad <muhammad@amyrom.ml>  Fri, 15 Apr 2022 14:27:36 +0500
+
