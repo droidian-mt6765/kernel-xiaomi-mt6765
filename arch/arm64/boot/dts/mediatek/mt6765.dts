@@ -53,6 +53,8 @@ firmware_class.path=/vendor/firmware";
 			reg = <0x000>;
 			enable-method = "psci";
 			clock-frequency = <2301000000>;
+			efficiency = <1023>;
+                        capacity-dmips-mhz = <1023>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
 		};
@@ -62,6 +64,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x001>;
 			enable-method = "psci";
+			efficiency = <1023>;
+                        capacity-dmips-mhz = <1023>;
 			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -72,6 +76,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x002>;
 			enable-method = "psci";
+			efficiency = <1023>;
+                        capacity-dmips-mhz = <1023>;
 			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -82,6 +88,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x003>;
 			enable-method = "psci";
+			efficiency = <1023>;
+                        capacity-dmips-mhz = <1023>;
 			clock-frequency = <2301000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -92,6 +100,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x100>;
 			enable-method = "psci";
+			efficiency = <1024>;
+                        capacity-dmips-mhz = <1024>;
 			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -102,6 +112,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x101>;
 			enable-method = "psci";
+			efficiency = <1024>;
+                        capacity-dmips-mhz = <1024>;
 			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -112,6 +124,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x102>;
 			enable-method = "psci";
+			efficiency = <1024>;
+                        capacity-dmips-mhz = <1024>;
 			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -122,6 +136,8 @@ firmware_class.path=/vendor/firmware";
 			compatible = "arm,cortex-a53";
 			reg = <0x103>;
 			enable-method = "psci";
+			efficiency = <1024>;
+                        capacity-dmips-mhz = <1024>;
 			clock-frequency = <1800000000>;
 			cpu-idle-states = <&STANDBY &MCDI_CPU &MCDI_CLUSTER>,
 					  <&SODI &SODI3 &DPIDLE &SUSPEND>;
@@ -219,6 +235,91 @@ firmware_class.path=/vendor/firmware";
 			};
 		};
 	};
+
+        energy_costs: energy-costs {
+                compatible = "sched-energy";
+
+                CPU_COST_0: core-cost0 {
+                        busy-cost-data = <
+                                  900000   78
+                                  979000   81
+                                 1085000   92
+                                 1218000  110
+                                 1351000  127
+                                 1484000  145
+                                 1617000  167
+                                 1750000  190
+                                 1814000  208
+                                 1879000  230
+                                 1944000  250
+                                 2009000  273
+                                 2074000  297
+                                 2139000  320
+                                 2215000  365
+                                 2301000  397
+                        >;
+                        idle-cost-data = <
+                                3 2 1
+                        >;
+                };
+
+                CPU_COST_1: core-cost1 {
+                        busy-cost-data = <
+                                  400000   48
+                                  501000   55
+                                  542000   57
+                                  643000   68
+                                  745000   77
+                                  846000   86
+                                  948000   98
+                                 1050000  108
+                                 1138000  123
+                                 1226000  136
+                                 1314000  151
+                                 1402000  166
+                                 1491000  184
+                                 1579000  204
+                                 1682000  226
+                                 1800000  260
+                        >;
+                        idle-cost-data = <
+                                3 2 1
+                        >;
+		};
+
+		CLUSTER_COST_0: cluster-cost0 {
+		busy-cost-data = <
+				300000    5
+				614400    8
+				864000    9
+				1017600   12
+				1305600   18
+				1420800   21
+				1612800   27
+				1804800   36
+			>;
+			idle-cost-data = <
+				4 3 2 1
+			>;
+		};
+
+		CLUSTER_COST_1: cluster-cost1 {
+		busy-cost-data = <
+				300000   38
+				652800   46
+				902400   52
+				1056000   68
+				1401600   88
+				1536000  100
+				1804800  108
+				2016000  120
+			>;
+			idle-cost-data = <
+				4 3 2 1
+			>;
+
+                };
+        };
 
 	psci {
 		compatible      = "arm,psci-1.0";
