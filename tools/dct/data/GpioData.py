@@ -136,7 +136,7 @@ class GpioData:
 
     @staticmethod
     def get_modeName(key, idx):
-        if key in GpioData._modeMap.keys():
+        if key in list(GpioData._modeMap.keys()):
             value = GpioData._modeMap[key]
             return value[idx]
 

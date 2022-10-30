@@ -33,6 +33,9 @@ struct LCM_DRIVER *lcm_driver_list[] = {
 #if defined(NT36525B_VDO_HDP_BOE_DIJING)
 	&nt36525b_vdo_hdp_boe_dijing_lcm_drv,
 #endif
+#if defined(NT36525B_VDO_HDP_BOE_XINLI)
+        &nt36525b_vdo_hdp_boe_xinli_lcm_drv,
+#endif
 #if defined(FT8006S_VDO_HDP_BOE_HELITAI)
 	&ft8006s_vdo_hdp_boe_helitai_lcm_drv,
 #endif

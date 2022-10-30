@@ -1,6 +1,15 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+def cmp(x, y):
+        if x < y:
+            return -1
+        elif x > y:
+            return 1
+        else:
+            return 0
+
+
 # Copyright (C) 2016 MediaTek Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -14,10 +23,10 @@
 
 import re
 import string
-import ConfigParser
+import configparser
 import xml.dom.minidom
 
-from ModuleObj import ModuleObj
+from .ModuleObj import ModuleObj
 from utility.util import LogLevel
 from utility.util import log
 from data.KpdData import KpdData
@@ -29,20 +38,20 @@ class KpdObj(ModuleObj):
 
 
     def get_cfgInfo(self):
-        cp = ConfigParser.ConfigParser(allow_no_value=True)
+        cp = configparser.ConfigParser(allow_no_value=True)
         cp.read(ModuleObj.get_cmpPath())
 
         ops = cp.options('Key_definition')
         for op in ops:
-            KpdData._keyValueMap[op.upper()] = string.atoi(cp.get('Key_definition', op))
+            KpdData._keyValueMap[op.upper()] = int(cp.get('Key_definition', op))
 
         KpdData._keyValueMap['NC'] = 0
 
         cp.read(ModuleObj.get_figPath())
         if cp.has_option('KEYPAD_EXTEND_TYPE', 'KEY_ROW'):
-            KpdData.set_row_ext(string.atoi(cp.get('KEYPAD_EXTEND_TYPE', 'KEY_ROW')))
+            KpdData.set_row_ext(int(cp.get('KEYPAD_EXTEND_TYPE', 'KEY_ROW')))
         if cp.has_option('KEYPAD_EXTEND_TYPE', 'KEY_COLUMN'):
-            KpdData.set_col_ext(string.atoi(cp.get('KEYPAD_EXTEND_TYPE', 'KEY_COLUMN')))
+            KpdData.set_col_ext(int(cp.get('KEYPAD_EXTEND_TYPE', 'KEY_COLUMN')))
 
         return True
 
@@ -51,11 +60,11 @@ class KpdObj(ModuleObj):
         for node in nodes:
             if node.nodeType == xml.dom.Node.ELEMENT_NODE:
                 if node.nodeName == 'row':
-                    row = string.atoi(node.childNodes[0].nodeValue)
+                    row = int(node.childNodes[0].nodeValue)
                     KpdData.set_row(row)
 
                 if node.nodeName == 'column':
-                    col = string.atoi(node.childNodes[0].nodeValue)
+                    col = int(node.childNodes[0].nodeValue)
                     KpdData.set_col(col)
 
                 if node.nodeName == 'keyMatrix':
@@ -94,7 +103,7 @@ class KpdObj(ModuleObj):
                     KpdData._modeKeys['FACTORY'] = keys[2]
 
                 if node.nodeName == 'pwrKeyEint_gpioNum':
-                    num = string.atoi(node.childNodes[0].nodeValue)
+                    num = int(node.childNodes[0].nodeValue)
                     KpdData.set_gpioNum(num)
 
                 if node.nodeName == 'pwrKeyUtility':
@@ -127,7 +136,7 @@ class KpdObj(ModuleObj):
                     KpdData.set_gpioDinHigh(flag)
 
                 if node.nodeName == 'pressPeriod':
-                    time = string.atoi(node.childNodes[0].nodeValue)
+                    time = int(node.childNodes[0].nodeValue)
                     KpdData.set_pressTime(time)
 
                 if node.nodeName == 'keyType':
@@ -219,7 +228,7 @@ class KpdObj(ModuleObj):
         gen_str += '''/****************Uboot Customation**************************/\n'''
         gen_str += '''/***********************************************************/\n'''
 
-        for (key, value) in KpdData.get_modeKeys().items():
+        for (key, value) in list(KpdData.get_modeKeys().items()):
             if cmp(value, 'NC') != 0:
                 idx = self.get_matrixIdx(value)
                 #idx = KpdData.get_matrix().index(value)
@@ -289,7 +298,7 @@ class KpdObj(ModuleObj):
                 continue
             gen_str += '''\tmediatek,kpd-hw-dl-key%d = <%s>;\n''' %(KpdData.get_downloadKeys().index(key), self.get_matrixIdx(key))
 
-        for (key, value) in KpdData.get_modeKeys().items():
+        for (key, value) in list(KpdData.get_modeKeys().items()):
             if cmp(value, 'NC') == 0:
                 continue
             gen_str += '''\tmediatek,kpd-hw-%s-key = <%d>;\n''' %(key.lower(), self.get_matrixIdx(value))
