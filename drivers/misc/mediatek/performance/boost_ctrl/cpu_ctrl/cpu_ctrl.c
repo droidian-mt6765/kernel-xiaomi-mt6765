@@ -348,8 +348,6 @@ static ssize_t perfmgr_perfserv_core_proc_write(struct file *filp
 				__func__, arg_num);
 	} else {
 		powerhal_tid = current->pid;
-		update_userlimit_cpu_core(CPU_KIR_PERF
-				, perfmgr_clusters, core_limit);
 	}
 out:
 	free_page((unsigned long)buf);
@@ -361,12 +359,6 @@ out1:
 
 static int perfmgr_perfserv_core_proc_show(struct seq_file *m, void *v)
 {
-	int i;
-
-	for_each_perfmgr_clusters(i)
-		seq_printf(m, "cluster %d min:%d max:%d\n",
-				i, core_set[CPU_KIR_PERF][i].min,
-				core_set[CPU_KIR_PERF][i].max);
 	return 0;
 }
 #endif // CPU_CTRL_CORE_SUPPORT
@@ -418,8 +410,6 @@ static ssize_t perfmgr_perfserv_freq_proc_write(struct file *filp
 				__func__, arg_num);
 	} else {
 		powerhal_tid = current->pid;
-		update_userlimit_cpu_freq(CPU_KIR_PERF
-				, perfmgr_clusters, freq_limit);
 	}
 out:
 	free_page((unsigned long)buf);
@@ -431,12 +421,6 @@ out1:
 
 static int perfmgr_perfserv_freq_proc_show(struct seq_file *m, void *v)
 {
-	int i;
-
-	for_each_perfmgr_clusters(i)
-		seq_printf(m, "cluster %d min:%d max:%d\n",
-				i, freq_set[CPU_KIR_PERF][i].min,
-				freq_set[CPU_KIR_PERF][i].max);
 	return 0;
 }
 /***************************************/
@@ -484,9 +468,6 @@ static ssize_t perfmgr_boot_core_proc_write(struct file *filp,
 	if (i < arg_num)
 		pr_debug("@%s: number of arguments < %d!\n",
 				__func__, arg_num);
-	else
-		update_userlimit_cpu_core(CPU_KIR_BOOT,
-				perfmgr_clusters, core_limit);
 
 out:
 	free_page((unsigned long)buf);
@@ -497,13 +478,6 @@ out:
 
 static int perfmgr_boot_core_proc_show(struct seq_file *m, void *v)
 {
-	int i;
-
-	for_each_perfmgr_clusters(i)
-		seq_printf(m, "cluster %d min:%d max:%d\n",
-				i, core_set[CPU_KIR_BOOT][i].min,
-				core_set[CPU_KIR_BOOT][i].max);
-
 	return 0;
 }
 #endif /* CPU_CTRL_CORE_SUPPORT */
@@ -554,9 +528,6 @@ static ssize_t perfmgr_boot_freq_proc_write(struct file *filp,
 	if (i < arg_num)
 		pr_debug("@%s: number of arguments < %d!\n",
 				__func__, arg_num);
-	else
-		update_userlimit_cpu_freq(CPU_KIR_BOOT,
-				perfmgr_clusters, freq_limit);
 
 out:
 	free_page((unsigned long)buf);
@@ -567,13 +538,6 @@ out:
 
 static int perfmgr_boot_freq_proc_show(struct seq_file *m, void *v)
 {
-	int i;
-
-	for_each_perfmgr_clusters(i)
-		seq_printf(m, "cluster %d min:%d max:%d\n",
-				i, freq_set[CPU_KIR_BOOT][i].min,
-				freq_set[CPU_KIR_BOOT][i].max);
-
 	return 0;
 }
 
