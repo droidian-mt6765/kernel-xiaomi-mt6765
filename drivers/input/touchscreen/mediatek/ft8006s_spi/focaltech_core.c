@@ -1840,15 +1840,15 @@ static int __init fts_ts_init(void)
 #ifdef CHECK_TOUCH_VENDOR
     //Check TP vendor
     if (IS_ERR_OR_NULL(mtkfb_lcm_name)){
-        FTS_ERROR("mtkfb_lcm_name ERROR!");
-        return -ENOMEM;
+	FTS_ERROR("mtkfb_lcm_name ERROR!");
+	return -ENOMEM;
+    } else if (strcmp(mtkfb_lcm_name,"ft8006s_vdo_hdp_boe_helitai_drv") == 0) {
+	FTS_INFO("TP info: [Vendor]helitai [IC]ft8006s");
+    } else if (strcmp(mtkfb_lcm_name, "ft8006s_ab_vdo_hdp_boe_helitai_drv") == 0) {
+	FTS_INFO("Registered touch driver;	[IC]: ft8006s_ab	[VENDOR]: helitai");
     } else {
-        if (strcmp(mtkfb_lcm_name,"ft8006s_vdo_hdp_boe_helitai_drv") == 0) {
-            FTS_INFO("TP info: [Vendor]helitai [IC]ft8006s");
-        } else {
-            FTS_ERROR("Unknow Touch");
-            return -ENODEV;
-        }
+	FTS_ERROR("Unknow Touch");
+	return -ENODEV;
     }
 
 #endif
