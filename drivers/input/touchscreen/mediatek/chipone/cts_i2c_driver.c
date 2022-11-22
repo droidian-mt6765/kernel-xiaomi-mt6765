@@ -253,7 +253,7 @@ static int cts_driver_probe(struct spi_device *client)
 	
 	/* Init firmware upgrade work and schedule */
 	INIT_DELAYED_WORK(&cts_data->fw_upgrade_work, cts_firmware_upgrade_work);
-	queue_delayed_work(cts_data->workqueue, &cts_data->fw_upgrade_work, msecs_to_jiffies(3000));
+	queue_delayed_work(cts_data->workqueue, &cts_data->fw_upgrade_work, msecs_to_jiffies(5000));
 
 #if 0
     ret = cts_start_device(&cts_data->cts_dev);

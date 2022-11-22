@@ -11,6 +11,8 @@
 #include <linux/namei.h>
 #include <linux/vmalloc.h>
 
+extern char mtkfb_lcm_name[256];
+
 u32 cts_crc32(const u8 *data, size_t len)
 {
     const static u32 crc32_table[] = {
@@ -612,6 +614,8 @@ const struct cts_firmware *cts_request_firmware(
     const struct cts_firmware *firmware_builtin = NULL;
     const struct cts_firmware *firmware_from_file = NULL;
 
+    char fwname[FILE_NAME_LENGTH] = { 0 };
+
     if (hwid == CTS_DEV_HWID_INVALID) {
         hwid =  CTS_DEV_HWID_ANY;
     }
@@ -629,12 +633,18 @@ const struct cts_firmware *cts_request_firmware(
 
 #ifdef CFG_CTS_FIRMWARE_IN_FS
     /* Check firmware in file system when probe only when build to .ko */
-    if (is_filesystem_mounted(CFG_CTS_FIRMWARE_FILEPATH)) {
-        firmware_from_file = cts_request_newer_firmware_from_fs(
-            cts_dev, CFG_CTS_FIRMWARE_FILENAME,
-            firmware_builtin ? FIRMWARE_VERSION(firmware_builtin) :
-                               curr_firmware_ver);
+    if (!strcmp(mtkfb_lcm_name, "icnl9911c_vdo_hdp_boe_tianma_drv")) {
+	snprintf(fwname, FILE_NAME_LENGTH, "chipone-tddi-%s.bin", \
+             "tianma");
+    } else if (!strcmp(mtkfb_lcm_name, "icnl9911c_vdo_hdp_boe_xinli_drv")) {
+	snprintf(fwname, FILE_NAME_LENGTH, "chipone-tddi-%s.bin", \
+             "truly");
     }
+
+    firmware_from_file = cts_request_newer_firmware_from_fs(
+	cts_dev, fwname,
+	firmware_builtin ? FIRMWARE_VERSION(firmware_builtin) : curr_firmware_ver);
+
 #endif /* CFG_CTS_FIRMWARE_IN_FS */
 
     return firmware_from_file ? firmware_from_file : firmware_builtin;

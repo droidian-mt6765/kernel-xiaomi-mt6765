@@ -13,6 +13,8 @@ struct cts_firmware {
 	const struct firmware *fw;
 };
 
+#define FILE_NAME_LENGTH	25
+
 #define FIRMWARE_VERSION_OFFSET     0x100
 #define FIRMWARE_VERSION(firmware)  \
     get_unaligned_le16((firmware)->data + FIRMWARE_VERSION_OFFSET)
