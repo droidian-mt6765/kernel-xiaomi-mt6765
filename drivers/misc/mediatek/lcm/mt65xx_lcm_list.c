@@ -48,6 +48,9 @@ struct LCM_DRIVER *lcm_driver_list[] = {
 #if defined(ICNL9911C_VDO_HDP_BOE_XINLI)
 	&icnl9911c_vdo_hdp_boe_xinli_lcm_drv,
 #endif
+#if defined(ICNL9911C_VDO_HDP_BOE_TIANMA)
+        &icnl9911c_vdo_hdp_boe_tianma_lcm_drv,
+#endif
 #if defined(NT36525B_VDO_HDP_BOE_HELITAI)
 	&nt36525b_vdo_hdp_boe_helitai_lcm_drv,
 #endif
