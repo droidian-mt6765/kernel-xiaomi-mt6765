@@ -235,7 +235,7 @@ static void ff_ctl_device_event(struct work_struct *ws)
     char *uevent_env[2] = {"FF_INTERRUPT", NULL};
     FF_LOGV("'%s' enter.", __func__);
     
-    FF_LOGD("%s(irq = %d, ..) toggled.", __func__, ctx->irq_num);
+    //FF_LOGD("%s(irq = %d, ..) toggled.", __func__, ctx->irq_num);
 #ifdef CONFIG_PM_WAKELOCKS
     __pm_wakeup_event(&g_context->wake_lock, jiffies_to_msecs(2*HZ));
 #else
