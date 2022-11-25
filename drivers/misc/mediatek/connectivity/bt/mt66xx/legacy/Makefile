@@ -1,5 +1,24 @@
+MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
 ###############################################################################
 # Bluetooth character device driver
+
+###############################################################################
+# Necessary Check
+
+ifneq ($(KERNEL_OUT),)
+    ccflags-y += -imacros $(KERNEL_OUT)/include/generated/autoconf.h
+endif
+
+ifndef TOP
+    TOP := $(srctree)/..
+endif
+
+ifneq ($(CFG_BT_PM_QOS_CONTROL),)
+    $(warning set PM_QOS_CONTROL=1)
+    ccflags-y += -D PM_QOS_CONTROL=1
+else
+    ccflags-y += -D PM_QOS_CONTROL=0
+endif
 
 # Force build fail on modpost warning
 KBUILD_MODPOST_FAIL_ON_WARNINGS := y
@@ -30,11 +49,12 @@ endif
 ###############################################################################
 
 MODULE_NAME := bt_drv
-obj-m += $(MODULE_NAME).o
+obj-y += $(MODULE_NAME).o
 
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 
 $(MODULE_NAME)-objs += stp_chrdev_bt.o
+$(MODULE_NAME)-objs += dbg_bt.o
 ifneq ($(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH),)
 $(MODULE_NAME)-objs += fw_log_bt.o
 endif
