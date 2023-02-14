@@ -1,7 +1,7 @@
 Source: linux-android-xiaomi-angelica
 Section: kernel
 Priority: optional
-Maintainer: Bardia Moshiri
+Maintainer: Bardia Moshiri <fakeshell@bardia.tech>
 Uploaders: Bardia Moshiri <fakeshell@bardia.tech>
 Build-Depends: build-essential,
                dpkg-dev,
@@ -27,7 +27,7 @@ Vcs-Browser: https://github.com/droidian-mt6765/kernel-xiaomi-mt6765
 Vcs-Git: https://github.com/droidian-mt6765/kernel-xiaomi-mt6765.git
 
 Package: linux-image-4.9-190-xiaomi-angelica
-Architecture: all
+Architecture: armhf
 Depends: ${misc:Depends}
 Description: Linux kernel for Xiaomi Redmi 9C
  This package contains the Linux kernel for the Xiaomi Redmi 9C device.
@@ -37,7 +37,7 @@ Description: Linux kernel for Xiaomi Redmi 9C
  for Android boot loaders.
 
 Package: linux-bootimage-4.9-190-xiaomi-angelica
-Architecture: all
+Architecture: armhf
 Pre-Depends: flash-bootimage (>= 4)
 Depends: ${misc:Depends},
          linux-image-4.9-190-xiaomi-angelica (= ${binary:Version})
@@ -48,26 +48,26 @@ Description: Linux kernel for Xiaomi Redmi 9C - Android Boot Image
  initramfs.
 
 Package: linux-headers-4.9-190-xiaomi-angelica
-Architecture: all
+Architecture: armhf
 Depends: ${misc:Depends},
          linux-image-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C - Headers
  This package contains the Linux kernel headers for the Xiaomi Redmi 9C device.
 
 Package: linux-image-xiaomi-angelica
-Architecture: all
+Architecture: armhf
 Depends: linux-image-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C (latest)
  This package depends to the latest kernel image available for the Xiaomi Redmi 9C.
 
 Package: linux-bootimage-xiaomi-angelica
-Architecture: all
+Architecture: armhf
 Depends: linux-bootimage-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C - Android Boot Image  (latest)
  This package depends to the latest kernel bootimage available for the Xiaomi Redmi 9C.
 
 Package: linux-headers-xiaomi-angelica
-Architecture: all
+Architecture: armhf
 Depends: linux-headers-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C - Headers (latest)
  This package depends to the latest kernel headers available for the Xiaomi Redmi 9C.
