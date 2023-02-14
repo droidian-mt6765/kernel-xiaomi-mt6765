@@ -37,7 +37,7 @@ Description: Linux kernel for Xiaomi Redmi 9C
  for Android boot loaders.
 
 Package: linux-bootimage-4.9-190-xiaomi-angelica
-Architecture: armhf
+Architecture: all
 Pre-Depends: flash-bootimage (>= 4)
 Depends: ${misc:Depends},
          linux-image-4.9-190-xiaomi-angelica (= ${binary:Version})
@@ -48,26 +48,26 @@ Description: Linux kernel for Xiaomi Redmi 9C - Android Boot Image
  initramfs.
 
 Package: linux-headers-4.9-190-xiaomi-angelica
-Architecture: armhf
+Architecture: all
 Depends: ${misc:Depends},
          linux-image-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C - Headers
  This package contains the Linux kernel headers for the Xiaomi Redmi 9C device.
 
 Package: linux-image-xiaomi-angelica
-Architecture: armhf
+Architecture: all
 Depends: linux-image-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C (latest)
  This package depends to the latest kernel image available for the Xiaomi Redmi 9C.
 
 Package: linux-bootimage-xiaomi-angelica
-Architecture: armhf
+Architecture: all
 Depends: linux-bootimage-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C - Android Boot Image  (latest)
  This package depends to the latest kernel bootimage available for the Xiaomi Redmi 9C.
 
 Package: linux-headers-xiaomi-angelica
-Architecture: armhf
+Architecture: all
 Depends: linux-headers-4.9-190-xiaomi-angelica (= ${binary:Version})
 Description: Linux kernel for Xiaomi Redmi 9C - Headers (latest)
  This package depends to the latest kernel headers available for the Xiaomi Redmi 9C.
