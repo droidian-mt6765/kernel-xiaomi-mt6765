@@ -95,7 +95,7 @@ DEVICE_VBMETA_IS_SAMSUNG = 0
 ########################################################################
 
 # Whether to enable kernel upgrades on package upgrades. Use 0 (no) or 1.
-FLASH_ENABLED = 1
+FLASH_ENABLED = 0
 
 # If your device is treble-ized, but aonly, you should set the following to
 # 1 (yes).

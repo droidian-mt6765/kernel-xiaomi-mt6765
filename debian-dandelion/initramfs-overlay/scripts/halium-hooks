@@ -1,0 +1,7 @@
+halium_hook_setup_touchscreen() {
+        echo 2047 > /sys/class/leds/lcd-backlight/brightness
+}
+
+halium_hook_teardown_touchscreen() {
+        echo 0 > /sys/class/leds/lcd-backlight/brightness
+}

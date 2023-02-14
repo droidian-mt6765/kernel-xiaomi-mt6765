@@ -1,15 +1,12 @@
 Source: linux-android-xiaomi-angelica
 Section: kernel
 Priority: optional
-Maintainer: Droidian porters <info@droidian.org>
-Uploaders: Eugenio Paolantonio (g7) <eugenio@droidian.org>,
-           r3vn <giuseppe@droidian.org>,
-           Erfan Abdi <erfan@droidian.org>,
-           Erik Inkinen <erik@droidian.org>,
+Maintainer: Bardia Moshiri
+Uploaders: Bardia Moshiri <fakeshell@bardia.tech>
 Build-Depends: build-essential,
                dpkg-dev,
                findutils,
-               python2,
+               python-is-python3,
                debhelper (>= 13),
                bc,
                rsync,
@@ -26,8 +23,8 @@ Build-Depends: build-essential,
                avbtool,
                linux-initramfs-halium-generic:arm64, binutils-aarch64-linux-gnu, clang-android-6.0-4691093, gcc-4.9-aarch64-linux-android, g++-4.9-aarch64-linux-android, libgcc-4.9-dev-aarch64-linux-android-cross
 Standards-Version: 4.5.0.3
-Vcs-Browser: https://github.com/droidian/linux-android-xiaomi-angelica
-Vcs-Git: https://github.com/droidian/linux-android-xiaomi-angelica.git
+Vcs-Browser: https://github.com/droidian-mt6765/kernel-xiaomi-mt6765
+Vcs-Git: https://github.com/droidian-mt6765/kernel-xiaomi-mt6765.git
 
 Package: linux-image-4.9-190-xiaomi-angelica
 Architecture: armhf
