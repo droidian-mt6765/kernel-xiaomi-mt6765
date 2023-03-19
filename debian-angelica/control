@@ -6,7 +6,7 @@ Uploaders: Bardia Moshiri <fakeshell@bardia.tech>
 Build-Depends: build-essential,
                dpkg-dev,
                findutils,
-               python-is-python3,
+               android-platform-prebuilts-python-linux-x86-2.7.5,
                debhelper (>= 13),
                bc,
                rsync,
